@@ -52,14 +52,18 @@ public class King extends Piece {
 
         // regular moves of the king; we check if the king will be under threat by opponent pieces or if there are any pieces of same color in any possible cell (8 directions)
         for(int i=0;i<8;i++)
-            if(isWithinTheRange(possibleRankPositions[i],possibleFilePositions[i]))
+            {
+                if(isWithinTheRange(possibleRankPositions[i],possibleFilePositions[i]))
               {
                     cell possibleCell = board.getCells()[possibleRankPositions[i]][possibleFilePositions[i]];
    // NOTE: there may be some runtime error here . Solution: we need firstly to check if there is a piece in the cell before checking its color
                     if((possibleCell.getPiece() == null || possibleCell.getPiece().getColor() != this.getColor())
                        && !isCellUnderThreat(opponentColor,possibleCell,board))
-                        this.possibleMoves.add(possibleCell);
+                        {
+                            this.possibleMoves.add(possibleCell);
+                        }
               }
+            }
 
         // check for castling moves (King side  and queen side )
         int [][] castlingDataForIteration = {{3,2},{-5,3}};

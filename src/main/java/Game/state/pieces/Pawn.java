@@ -22,7 +22,7 @@ public class Pawn extends Piece {
 
          if(this.twoCellsMoves.contains(move.getToCell())){
              Board.lastMoveType = Move.moveType.PAWN_EN_PASSANT;
-             board.setEnPassant(move.getFromCell());
+             board.setEnPassant(move.getToCell());
          } else{
              Board.lastMoveType = Move.moveType.REGULAR;
              board.setEnPassant(null);
@@ -71,7 +71,9 @@ public class Pawn extends Piece {
                     this.attackMoves.add(possibleCell);
             } else{
                 if(board.getEnPassant() != null){
+                    System.out.println(board.getEnPassant());
                     if(board.getEnPassant().getFile() - fromCellFile == 1 && board.getEnPassant().getRank() == fromCellRank){
+                        System.out.println("succ");
                         this.possibleMoves.add(possibleCell);
                     }
                 }
@@ -91,6 +93,7 @@ public class Pawn extends Piece {
             } else {
                 if(board.getEnPassant() != null){
                     if(fromCellFile - board.getEnPassant().getFile() == 1 && board.getEnPassant().getRank() == fromCellRank){
+                        System.out.println("succ");
                         this.possibleMoves.add(possibleCell);
                     }
                 }
