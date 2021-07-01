@@ -71,7 +71,7 @@ public class Pawn extends Piece {
                     this.attackMoves.add(possibleCell);
             } else{
                 if(board.getEnPassant() != null){
-                    if(board.getEnPassant().getFile() - fromCellFile == 1){
+                    if(board.getEnPassant().getFile() - fromCellFile == 1 && board.getEnPassant().getRank() == fromCellRank){
                         this.possibleMoves.add(possibleCell);
                     }
                 }
@@ -90,7 +90,7 @@ public class Pawn extends Piece {
                     this.attackMoves.add(possibleCell);
             } else {
                 if(board.getEnPassant() != null){
-                    if(fromCellFile - board.getEnPassant().getFile() == 1 ){
+                    if(fromCellFile - board.getEnPassant().getFile() == 1 && board.getEnPassant().getRank() == fromCellRank){
                         this.possibleMoves.add(possibleCell);
                     }
                 }
