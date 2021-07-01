@@ -1,0 +1,22 @@
+.square {
+    -fx-border-style: solid;
+    -fx-background-color: brown;
+}
+
+.square:hover{
+    -fx-background-color: black;
+}
+
+.square-black{
+ -fx-border-style: solid;
+    -fx-background-color: #F0D9B5;
+}
+
+.possibleMove{
+ -fx-border-style: solid;
+    -fx-background-color: #87a7b3;
+}
+.possibleCapture{
+ -fx-border-style: solid;
+    -fx-background-color: red;
+}
