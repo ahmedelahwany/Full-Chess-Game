@@ -15,6 +15,8 @@ public class Queen extends Piece {
 
     @Override
     public boolean validateMove(Move move, Board board) {
+        Board.lastMoveType = Move.moveType.REGULAR;
+        board.setEnPassant(null);
         return getPossibleMoves(move,board).contains(move.getToCell());
 
     }

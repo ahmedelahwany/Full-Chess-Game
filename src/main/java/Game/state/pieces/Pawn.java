@@ -14,10 +14,20 @@ public class Pawn extends Piece {
     }
 
     private ArrayList<cell> attackMoves = new ArrayList<>();
+    private ArrayList<cell> twoCellsMoves = new ArrayList<>();
+
 
     @Override
     public boolean validateMove(Move move, Board board) {
-        return false;
+
+         if(this.twoCellsMoves.contains(move.getToCell())){
+             Board.lastMoveType = Move.moveType.PAWN_EN_PASSANT;
+             board.setEnPassant(move.getFromCell());
+         } else{
+             Board.lastMoveType = Move.moveType.REGULAR;
+             board.setEnPassant(null);
+         }
+        return getPossibleMoves(move,board).contains(move.getToCell());
     }
 
     public ArrayList<cell> getAttackMoves() {
@@ -48,11 +58,12 @@ public class Pawn extends Piece {
                 cell possibleCell = board.getCells()[fromCellRank + 2 * direction][fromCellFile];
                 if(possibleCell.getPiece() == null && fromCellRank == defaultStartRank)
                     this.possibleMoves.add(possibleCell);
+                    this.twoCellsMoves.add(possibleCell);
             }
-        // capture Left move with respect to the capturing pawn
-        if((isWithinTheRange(fromCellRank + direction,fromCellFile - direction)))
+        // capture Right move with respect to the capturing pawn
+        if((isWithinTheRange(fromCellRank + direction,fromCellFile + 1)))
         {
-            cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile - direction];
+            cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile + 1];
             if(possibleCell.getPiece() != null )
             {
                 if(possibleCell.getPiece().getColor() != currentPlayerColor)
@@ -60,18 +71,18 @@ public class Pawn extends Piece {
                     this.attackMoves.add(possibleCell);
             } else{
                 if(board.getEnPassant() != null){
-                    if(fromCellFile - board.getEnPassant().getFile() == direction ){
+                    if(board.getEnPassant().getFile() - fromCellFile == 1){
                         this.possibleMoves.add(possibleCell);
                     }
                 }
             }
         }
 
-        // capture Right move with respect to the capturing pawn
-        if((isWithinTheRange(fromCellRank + direction,fromCellFile + direction)))
+        // capture Left move with respect to the capturing pawn
+        if((isWithinTheRange(fromCellRank + direction,fromCellFile - 1)))
 
         {
-            cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile + direction];
+            cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile - 1];
             if(possibleCell.getPiece() != null )
             {
                 if(possibleCell.getPiece().getColor() != currentPlayerColor)
@@ -79,7 +90,7 @@ public class Pawn extends Piece {
                     this.attackMoves.add(possibleCell);
             } else {
                 if(board.getEnPassant() != null){
-                    if(fromCellFile - board.getEnPassant().getFile() == direction ){
+                    if(fromCellFile - board.getEnPassant().getFile() == 1 ){
                         this.possibleMoves.add(possibleCell);
                     }
                 }

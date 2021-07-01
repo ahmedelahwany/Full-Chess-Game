@@ -23,11 +23,15 @@ public class King extends Piece {
         if(this.getPossibleMoves(move,board).contains(move.getToCell())){
             if(this.castleMoves.get(0).equals(move.getToCell())){
                 Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
+                board.setEnPassant(null);
             } else if (this.castleMoves.get(1).equals(move.getToCell())){
                 Board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
+                board.setEnPassant(null);
             } else {
                 Board.lastMoveType = Move.moveType.REGULAR;
+                board.setEnPassant(null);
             }
+
             return true;
         } else {
             return  false;
