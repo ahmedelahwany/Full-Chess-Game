@@ -9,6 +9,8 @@ import java.util.ArrayList;
 public abstract class Piece {
 
     protected ArrayList<cell> possibleMoves = new ArrayList<>();
+    protected ArrayList<cell> RegularMoves = new ArrayList<>();
+
     public enum Color {
         WHITE, BLACK
     }
@@ -16,7 +18,7 @@ public abstract class Piece {
     public enum Type {
         KING, ROOK, BISHOP, QUEEN, KNIGHT, PAWN
     }
-    private boolean firstMove;
+    private boolean firstMove = true;
 
     public boolean isFirstMove() {
         return firstMove;
@@ -51,10 +53,13 @@ public abstract class Piece {
     public void setType(Type type) {
         this.type = type;
     }
-    protected boolean isWithinTheRange ( int Rank, int file){
+
+    public ArrayList<cell> getRegularMoves() {
+        return this.RegularMoves;
+    }
+
+    protected boolean isWithinTheRange (int Rank, int file){
         return 0 <= Rank && Rank <= 7 && 0 <= file && file <= 7;
     }
-    protected boolean isCellUnderThreat(Color opponentColor , cell cell , Board board){
-        return board.getAttackedCellsByOpponent(opponentColor).contains(cell);
-    }
+
 }

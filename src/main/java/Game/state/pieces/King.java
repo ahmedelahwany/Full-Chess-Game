@@ -21,10 +21,10 @@ public class King extends Piece {
 
         // NOTE : there may be some error here ( castleMoves array may be empty )
         if(this.getPossibleMoves(move,board).contains(move.getToCell())){
-            if(this.castleMoves.get(0).equals(move.getToCell())){
+            if(this.castleMoves.size()>0 && this.castleMoves.get(0).equals(move.getToCell())){
                 Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
                 board.setEnPassant(null);
-            } else if (this.castleMoves.get(1).equals(move.getToCell())){
+            } else if (this.castleMoves.size()>0 && this.castleMoves.get(1).equals(move.getToCell())){
                 Board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
                 board.setEnPassant(null);
             } else {
@@ -38,6 +38,11 @@ public class King extends Piece {
         }
     }
 
+    public ArrayList<cell> getCastleMoves() {
+        return castleMoves;
+    }
+
+
     @Override
     public ArrayList<cell> getPossibleMoves(Move move, Board board) {
         Color opponentColor = move.getFromCell().getPiece().getColor() == Color.WHITE ? Color.BLACK:Color.WHITE;
@@ -45,20 +50,22 @@ public class King extends Piece {
         int KingFile = move.getFromCell().getFile();
         this.possibleMoves.clear();
         this.castleMoves.clear();
-        int defaultRookRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 0 : 7;
+        this.RegularMoves.clear();
+        int defaultRookRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 7 : 0;
 
         int[] possibleRankPositions ={KingRank,KingRank, KingRank + 1, KingRank + 1, KingRank + 1, KingRank - 1, KingRank - 1, KingRank - 1};
         int[] possibleFilePositions ={KingFile - 1, KingFile + 1, KingFile - 1,KingFile, KingFile + 1, KingFile - 1,KingFile, KingFile + 1};
 
+         ArrayList<cell> attackedCellByOpponent = board.getAttackedCellsByOpponent(opponentColor);
         // regular moves of the king; we check if the king will be under threat by opponent pieces or if there are any pieces of same color in any possible cell (8 directions)
         for(int i=0;i<8;i++)
             {
                 if(isWithinTheRange(possibleRankPositions[i],possibleFilePositions[i]))
               {
                     cell possibleCell = board.getCells()[possibleRankPositions[i]][possibleFilePositions[i]];
-   // NOTE: there may be some runtime error here . Solution: we need firstly to check if there is a piece in the cell before checking its color
+                    this.RegularMoves.add(possibleCell);
                     if((possibleCell.getPiece() == null || possibleCell.getPiece().getColor() != this.getColor())
-                       && !isCellUnderThreat(opponentColor,possibleCell,board))
+                       && !attackedCellByOpponent.contains(possibleCell))
                         {
                             this.possibleMoves.add(possibleCell);
                         }
@@ -66,26 +73,26 @@ public class King extends Piece {
             }
 
         // check for castling moves (King side  and queen side )
-        int [][] castlingDataForIteration = {{3,2},{-5,3}};
-        for (int i = 0; i < castlingDataForIteration.length; i++) {
-            boolean castleValid = false;
-            Piece rockPosition = board.getCells()[defaultRookRank][KingFile + castlingDataForIteration[i][0]].getPiece();
-            if( rockPosition != null){
-                if(this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked(move.getFromCell(),board)){
-                     castleValid = true;
-                    for (int j = 1  ; j <= castlingDataForIteration[i][1] ; i++){
-                      cell interveningCell = board.getCells()[defaultRookRank][KingFile + j];  // cell between king and rock has to be empty and not under attack by any opponent piece
-                      if(isCellUnderThreat(opponentColor,interveningCell,board) || interveningCell.getPiece() != null){
-                          castleValid = false;
-                      }
-                    }
-                }
-            }
-             if(castleValid){
-                 this.possibleMoves.add( new cell(defaultRookRank,KingFile + castlingDataForIteration[i][1]));
-                 this.castleMoves.add( new cell(defaultRookRank,KingFile + castlingDataForIteration[i][1]));
-             }
-        }
+//        int [][] castlingDataForIteration = {{3,2},{-4,3}};
+//        for (int i = 0; i < castlingDataForIteration.length; i++) {
+//            boolean castleValid = false;
+//            Piece rockPosition = board.getCells()[defaultRookRank][KingFile + castlingDataForIteration[i][0]].getPiece();
+//            if( rockPosition != null){
+//                if(this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked(move.getFromCell(),board)){
+//                     castleValid = true;
+//                    for (int j = 1  ; j <= castlingDataForIteration[i][1] ; i++){
+//                      cell interveningCell = board.getCells()[defaultRookRank][KingFile + j];  // cell between king and rock has to be empty and not under attack by any opponent piece
+//                      if(attackedCellByOpponent.contains(interveningCell)|| interveningCell.getPiece() != null){
+//                          castleValid = false;
+//                      }
+//                    }
+//                }
+//            }
+//             if(castleValid){
+//                 this.possibleMoves.add( new cell(defaultRookRank,KingFile + castlingDataForIteration[i][1]));
+//                 this.castleMoves.add( new cell(defaultRookRank,KingFile + castlingDataForIteration[i][1]));
+//             }
+//        }
 
         return this.possibleMoves;
 
@@ -110,6 +117,28 @@ public class King extends Piece {
             return true;
         }
             return false;
+    }
+
+
+    public ArrayList<cell> getRegularMoves(Move move, Board board) {
+        int KingRank = move.getFromCell().getRank();
+        int KingFile = move.getFromCell().getFile();
+        this.possibleMoves.clear();
+        this.castleMoves.clear();
+
+        int[] possibleRankPositions ={KingRank,KingRank, KingRank + 1, KingRank + 1, KingRank + 1, KingRank - 1, KingRank - 1, KingRank - 1};
+        int[] possibleFilePositions ={KingFile - 1, KingFile + 1, KingFile - 1,KingFile, KingFile + 1, KingFile - 1,KingFile, KingFile + 1};
+
+        // regular moves of the king; we check if the king will be under threat by opponent pieces or if there are any pieces of same color in any possible cell (8 directions)
+        for(int i=0;i<8;i++)
+        {
+            if(isWithinTheRange(possibleRankPositions[i],possibleFilePositions[i]))
+            {
+                cell possibleCell = board.getCells()[possibleRankPositions[i]][possibleFilePositions[i]];
+                this.RegularMoves.add(possibleCell);
+            }
+        }
+        return this.possibleMoves;
     }
 
     @Override

@@ -4,6 +4,7 @@ import Game.state.Move;
 import Game.state.pieces.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Board {
 
@@ -23,23 +24,29 @@ public class Board {
     private cell[][] cells = new cell[8][8];
 
     public ArrayList<cell> getAttackedCellsByOpponent(Piece.Color playerColor) {
+        this.attackedCellsByOpponent.clear();
         for ( cell[] row : cells){
             for (cell cell :row){
                 if (cell.getPiece() != null)
                {
                    if(cell.getPiece().getColor() == playerColor){
-                    if(cell.getPiece().getType() == Piece.Type.PAWN){
-                        cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this);
-                        Pawn pawn = (Pawn) cell.getPiece();
-                        this.attackedCellsByOpponent.addAll(pawn.getAttackMoves());
+                       if(cell.getPiece().getType() == Piece.Type.PAWN){
+                           cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this);
+                           Pawn pawn = (Pawn) cell.getPiece();
+                           this.attackedCellsByOpponent.addAll(pawn.getAttackMoves());
                     }
-                    else {
-                        this.attackedCellsByOpponent.addAll(cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this));
-                    }
+                    else if (cell.getPiece().getType() == Piece.Type.KING) {
+                           King king = (King) cell.getPiece();
+                           this.attackedCellsByOpponent.addAll(king.getRegularMoves(new Move(cell,new cell (0,0)),this));
+                    } else {
+                           cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this);
+                           this.attackedCellsByOpponent.addAll(cell.getPiece().getRegularMoves());
+                       }
                 }
                }
             }
         }
+
         return attackedCellsByOpponent;
     }
 
@@ -61,7 +68,7 @@ public class Board {
 
 
 
-    private void build(int cellsCode[][]){
+    private void build(int[][] cellsCode){
         Piece.Color color;
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {
@@ -112,6 +119,18 @@ public class Board {
         return cells;
     }
 
+
+    @Override
+    public String toString() {
+            StringBuilder sb = new StringBuilder();
+            for (cell[] row : this.getCells()) {
+                for (cell cell : row) {
+                    sb.append(cell).append(' ');
+                }
+                sb.append('\n');
+            }
+            return sb.toString();
+    }
 
     public cell getEnPassant() {
         return enPassant;

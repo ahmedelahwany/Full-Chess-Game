@@ -32,15 +32,18 @@ public class Bishop extends Piece {
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 
         this.possibleMoves.clear();
+        this.RegularMoves.clear();
         while(iteratorX + fromCellRank < Board.DIMENSION && iteratorY + fromCellFile < Board.DIMENSION){
 
               cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile + iteratorY];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;
@@ -51,12 +54,14 @@ public class Bishop extends Piece {
         while( fromCellRank - iteratorX >= 0 &&  fromCellFile - iteratorY >= 0){
 
             cell possibleCell =  board.getCells()[fromCellRank - iteratorX][fromCellFile - iteratorY];
+            this.RegularMoves.add(possibleCell);
             if ( possibleCell.getPiece() != null) {
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;
@@ -67,12 +72,14 @@ public class Bishop extends Piece {
         while( fromCellRank - iteratorX >= 0 &&  fromCellFile + iteratorY < Board.DIMENSION){
 
             cell possibleCell = board.getCells()[fromCellRank - iteratorX][fromCellFile + iteratorY];
+            this.RegularMoves.add(possibleCell);
             if ( possibleCell.getPiece() != null) {
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;
@@ -85,11 +92,13 @@ public class Bishop extends Piece {
 
             cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile - iteratorY];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;

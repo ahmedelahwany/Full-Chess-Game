@@ -30,18 +30,20 @@ public class Queen extends Piece {
         int iteratorX = 1;
         int iteratorY = 1;
         this.possibleMoves.clear();
-
+        this.RegularMoves.clear();
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 
         while(iterator+fromCellFile < Board.DIMENSION ){
 
             cell possibleCell = board.getCells()[fromCellRank][fromCellFile+iterator];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }
@@ -51,11 +53,13 @@ public class Queen extends Piece {
 
             cell possibleCell = board.getCells()[fromCellRank][fromCellFile-iterator];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }
@@ -66,11 +70,13 @@ public class Queen extends Piece {
 
             cell possibleCell = board.getCells()[fromCellRank + iterator][fromCellFile];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }
@@ -79,11 +85,13 @@ public class Queen extends Piece {
         while(fromCellRank - iterator >= 0){
             cell possibleCell = board.getCells()[fromCellRank - iterator][fromCellFile];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }
@@ -92,11 +100,13 @@ public class Queen extends Piece {
 
             cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile + iteratorY];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;
@@ -108,11 +118,13 @@ public class Queen extends Piece {
 
             cell possibleCell =  board.getCells()[fromCellRank - iteratorX][fromCellFile - iteratorY];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;
@@ -124,11 +136,13 @@ public class Queen extends Piece {
 
             cell possibleCell = board.getCells()[fromCellRank - iteratorX][fromCellFile + iteratorY];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;
@@ -141,11 +155,13 @@ public class Queen extends Piece {
 
             cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile - iteratorY];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iteratorX++;
             iteratorY++;

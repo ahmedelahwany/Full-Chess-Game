@@ -28,18 +28,20 @@ public class Rock extends Piece{
         int fromCellRank = move.getFromCell().getRank();
         int iterator = 1;
         this.possibleMoves.clear();
-
+        this.RegularMoves.clear();
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 
-       while(iterator+fromCellFile<Board.DIMENSION ){
+       while(iterator + fromCellFile < Board.DIMENSION ){
 
            cell possibleCell = board.getCells()[fromCellRank][fromCellFile+iterator];
            if ( possibleCell.getPiece() != null) {
+               this.RegularMoves.add(possibleCell);
                if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                    this.possibleMoves.add(possibleCell);
                }
                break;
            }
+           this.RegularMoves.add(possibleCell);
            this.possibleMoves.add(possibleCell);
            iterator++;
        }
@@ -49,11 +51,13 @@ public class Rock extends Piece{
 
             cell possibleCell = board.getCells()[fromCellRank][fromCellFile-iterator];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }
@@ -64,11 +68,13 @@ public class Rock extends Piece{
 
             cell possibleCell = board.getCells()[fromCellRank + iterator][fromCellFile];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }
@@ -78,11 +84,13 @@ public class Rock extends Piece{
 
             cell possibleCell = board.getCells()[fromCellRank - iterator][fromCellFile];
             if ( possibleCell.getPiece() != null) {
+                this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                     this.possibleMoves.add(possibleCell);
                 }
                 break;
             }
+            this.RegularMoves.add(possibleCell);
             this.possibleMoves.add(possibleCell);
             iterator++;
         }

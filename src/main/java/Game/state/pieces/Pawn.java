@@ -44,7 +44,9 @@ public class Pawn extends Piece {
         int defaultStartRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 6 : 1;
         currentPlayerColor = move.getFromCell().getPiece().getColor();
         this.possibleMoves.clear();
-
+        this.RegularMoves.clear();
+        this.attackMoves.clear();
+        this.twoCellsMoves.clear();
         // one cell forward move
         if((isWithinTheRange(fromCellRank + direction,fromCellFile)))
        {
@@ -64,6 +66,7 @@ public class Pawn extends Piece {
         if((isWithinTheRange(fromCellRank + direction,fromCellFile + 1)))
         {
             cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile + 1];
+            this.RegularMoves.add(possibleCell);
             if(possibleCell.getPiece() != null )
             {
                 if(possibleCell.getPiece().getColor() != currentPlayerColor)
@@ -73,7 +76,6 @@ public class Pawn extends Piece {
                 if(board.getEnPassant() != null){
                     System.out.println(board.getEnPassant());
                     if(board.getEnPassant().getFile() - fromCellFile == 1 && board.getEnPassant().getRank() == fromCellRank){
-                        System.out.println("succ");
                         this.possibleMoves.add(possibleCell);
                     }
                 }
@@ -85,6 +87,7 @@ public class Pawn extends Piece {
 
         {
             cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile - 1];
+            this.RegularMoves.add(possibleCell);
             if(possibleCell.getPiece() != null )
             {
                 if(possibleCell.getPiece().getColor() != currentPlayerColor)
@@ -93,7 +96,6 @@ public class Pawn extends Piece {
             } else {
                 if(board.getEnPassant() != null){
                     if(fromCellFile - board.getEnPassant().getFile() == 1 && board.getEnPassant().getRank() == fromCellRank){
-                        System.out.println("succ");
                         this.possibleMoves.add(possibleCell);
                     }
                 }
