@@ -21,10 +21,10 @@ public class King extends Piece {
 
         // NOTE : there may be some error here ( castleMoves array may be empty )
         if(this.getPossibleMoves(move,board).contains(move.getToCell())){
-            if(this.castleMoves.size()>0 && this.castleMoves.get(0).equals(move.getToCell())){
+            if(this.castleMoves.size() > 0 && this.castleMoves.get(0).equals(move.getToCell())){
                 Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
                 board.setEnPassant(null);
-            } else if (this.castleMoves.size()>0 && this.castleMoves.get(1).equals(move.getToCell())){
+            } else if (this.castleMoves.size() > 0 && this.castleMoves.get(1).equals(move.getToCell())){
                 Board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
                 board.setEnPassant(null);
             } else {
@@ -73,26 +73,29 @@ public class King extends Piece {
             }
 
         // check for castling moves (King side  and queen side )
-//        int [][] castlingDataForIteration = {{3,2},{-4,3}};
-//        for (int i = 0; i < castlingDataForIteration.length; i++) {
-//            boolean castleValid = false;
-//            Piece rockPosition = board.getCells()[defaultRookRank][KingFile + castlingDataForIteration[i][0]].getPiece();
-//            if( rockPosition != null){
-//                if(this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked(move.getFromCell(),board)){
-//                     castleValid = true;
-//                    for (int j = 1  ; j <= castlingDataForIteration[i][1] ; i++){
-//                      cell interveningCell = board.getCells()[defaultRookRank][KingFile + j];  // cell between king and rock has to be empty and not under attack by any opponent piece
-//                      if(attackedCellByOpponent.contains(interveningCell)|| interveningCell.getPiece() != null){
-//                          castleValid = false;
-//                      }
-//                    }
-//                }
-//            }
-//             if(castleValid){
-//                 this.possibleMoves.add( new cell(defaultRookRank,KingFile + castlingDataForIteration[i][1]));
-//                 this.castleMoves.add( new cell(defaultRookRank,KingFile + castlingDataForIteration[i][1]));
-//             }
-//        }
+        int [][] castlingDataForIteration = {{3,2},{-4,3}};
+        for (int[] ints : castlingDataForIteration) {
+            int direction = ints[0] == 3 ? 1 : -1;
+            boolean castleValid = false;
+            Piece rockPosition = board.getCells()[defaultRookRank][KingFile + ints[0]].getPiece();
+            if (rockPosition != null) {
+                if (this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked(move.getFromCell(), board)) {
+                    castleValid = true;
+                    for (int j = 1; j <= ints[1]; j++) {
+                        cell interveningCell = board.getCells()[defaultRookRank][KingFile + direction * j];  // cell between king and rock has to be empty and not under attack by any opponent piece
+                        if (attackedCellByOpponent.contains(interveningCell) || interveningCell.getPiece() != null) {
+                            System.out.println("check");
+                            castleValid = false;
+                        }
+                    }
+                }
+            }
+            System.out.println(castleValid);
+            if (castleValid) {
+                this.possibleMoves.add(new cell(defaultRookRank, KingFile + direction * 2));
+                this.castleMoves.add(new cell(defaultRookRank, KingFile + direction * 2));
+            }
+        }
 
         return this.possibleMoves;
 
