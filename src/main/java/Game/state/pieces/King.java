@@ -9,7 +9,9 @@ import java.util.ArrayList;
 
 public class King extends Piece {
 
-    private ArrayList<cell> castleMoves = new ArrayList<>();
+    private cell kingSideCastleMove  ;
+
+    private cell QueenSideCastleMove ;
 
     public King(Color color) {
         super(color);
@@ -19,12 +21,11 @@ public class King extends Piece {
     @Override
     public boolean validateMove(Move move, Board board) {
 
-        // NOTE : there may be some error here ( castleMoves array may be empty )
         if(this.getPossibleMoves(move,board).contains(move.getToCell())){
-            if(this.castleMoves.size() > 0 && this.castleMoves.get(0).equals(move.getToCell())){
+            if( kingSideCastleMove != null){
                 Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
                 board.setEnPassant(null);
-            } else if (this.castleMoves.size() > 0 && this.castleMoves.get(1).equals(move.getToCell())){
+            } else if (QueenSideCastleMove != null){
                 Board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
                 board.setEnPassant(null);
             } else {
@@ -38,9 +39,6 @@ public class King extends Piece {
         }
     }
 
-    public ArrayList<cell> getCastleMoves() {
-        return castleMoves;
-    }
 
 
     @Override
@@ -49,7 +47,8 @@ public class King extends Piece {
         int KingRank = move.getFromCell().getRank();
         int KingFile = move.getFromCell().getFile();
         this.possibleMoves.clear();
-        this.castleMoves.clear();
+        kingSideCastleMove = null;
+        QueenSideCastleMove = null;
         this.RegularMoves.clear();
         int defaultRookRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 7 : 0;
 
@@ -84,16 +83,18 @@ public class King extends Piece {
                     for (int j = 1; j <= ints[1]; j++) {
                         cell interveningCell = board.getCells()[defaultRookRank][KingFile + direction * j];  // cell between king and rock has to be empty and not under attack by any opponent piece
                         if (attackedCellByOpponent.contains(interveningCell) || interveningCell.getPiece() != null) {
-                            System.out.println("check");
                             castleValid = false;
                         }
                     }
                 }
             }
-            System.out.println(castleValid);
             if (castleValid) {
                 this.possibleMoves.add(new cell(defaultRookRank, KingFile + direction * 2));
-                this.castleMoves.add(new cell(defaultRookRank, KingFile + direction * 2));
+                if(ints[0] == 3) {
+                    kingSideCastleMove = new cell(defaultRookRank, KingFile + direction * 2);
+                } else {
+                    QueenSideCastleMove = new cell(defaultRookRank, KingFile + direction * 2);
+                }
             }
         }
 
@@ -127,7 +128,6 @@ public class King extends Piece {
         int KingRank = move.getFromCell().getRank();
         int KingFile = move.getFromCell().getFile();
         this.possibleMoves.clear();
-        this.castleMoves.clear();
 
         int[] possibleRankPositions ={KingRank,KingRank, KingRank + 1, KingRank + 1, KingRank + 1, KingRank - 1, KingRank - 1, KingRank - 1};
         int[] possibleFilePositions ={KingFile - 1, KingFile + 1, KingFile - 1,KingFile, KingFile + 1, KingFile - 1,KingFile, KingFile + 1};

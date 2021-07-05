@@ -99,6 +99,20 @@ public class Rock extends Piece{
     }
 
     @Override
+    public ArrayList<cell> checkPinnedPieces(cell position,Board board) {
+
+        cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
+        int OpponentKingRank = opponentKing.getRank();
+        int OpponentKingFile = opponentKing.getFile();
+// check pinned pieces in straight directions (Row And Column)
+        if (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile() ){
+             return getPinnedPieces(position,board);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 3 : 9;
     }

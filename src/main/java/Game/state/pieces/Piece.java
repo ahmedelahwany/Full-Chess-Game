@@ -20,6 +20,9 @@ public abstract class Piece {
     }
     private boolean firstMove = true;
 
+    private boolean isPinned = false;
+
+
     public boolean isFirstMove() {
         return firstMove;
     }
@@ -36,7 +39,39 @@ public abstract class Piece {
 
     }
 
+    public boolean isPinned() {
+        return isPinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        isPinned = pinned;
+    }
+
     public abstract boolean validateMove(Move move , Board board);
+
+    // to check if bishop,Rock or Queen pin a specific opponent's piece to the opponent's king
+    // pinned pieces can't move at all
+    public  ArrayList<cell> checkPinnedPieces(cell position ,Board board){return null;}
+
+    protected  ArrayList<cell> getPinnedPieces(cell position ,Board board){
+        ArrayList<cell> cells = new ArrayList<>();
+        cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
+        Color opponentColor = opponentKing.getPiece().getColor();
+        int OpponentKingRank = opponentKing.getRank();
+        int OpponentKingFile = opponentKing.getFile();
+
+        int directionRank = OpponentKingRank > position.getRank() ? 1 : -1;
+        int directionFile = OpponentKingFile > position.getFile() ? 1 : -1;
+
+
+        for (int i = position.getRank(), j = position.getFile(); i < OpponentKingRank && j < OpponentKingFile; i = i + directionRank, j = j + directionFile) {
+            if (board.getCells()[i][j].getPiece().getColor() == opponentColor) {
+                cells.add(board.getCells()[i][j]);
+            }
+        }
+        return cells.size() == 1 ? cells : null;  // for a piece to be pinned to a king , it has to be the only piece in the way from the attacking piece to the king.
+    }
+
 
     public abstract ArrayList<cell> getPossibleMoves(Move move , Board board);
 

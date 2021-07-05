@@ -33,6 +33,8 @@ public class Bishop extends Piece {
 
         this.possibleMoves.clear();
         this.RegularMoves.clear();
+
+
         while(iteratorX + fromCellRank < Board.DIMENSION && iteratorY + fromCellFile < Board.DIMENSION){
 
               cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile + iteratorY];
@@ -88,7 +90,7 @@ public class Bishop extends Piece {
         iteratorX = 1;
         iteratorY = 1;
 
-        while( fromCellRank + iteratorX <Board.DIMENSION &&  fromCellFile - iteratorY >= 0){
+        while( fromCellRank + iteratorX <Board.DIMENSION  &&  fromCellFile - iteratorY >= 0){
 
             cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile - iteratorY];
             if ( possibleCell.getPiece() != null) {
@@ -108,6 +110,18 @@ public class Bishop extends Piece {
         return this.possibleMoves;
     }
 
+    public ArrayList<cell> checkPinnedPieces(cell position,Board board) {
+
+        cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
+        int OpponentKingRank = opponentKing.getRank();
+        int OpponentKingFile = opponentKing.getFile();
+// check pinned pieces in the diagonal direction
+        if (Math.abs(OpponentKingRank - position.getRank()) == 1 && Math.abs(OpponentKingFile - position.getFile()) == 1 ) {
+            return getPinnedPieces(position,board);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public int getCode() {

@@ -60,10 +60,14 @@ public class Board {
         move.getFromCell().getPiece().validateMove(move,this);
         // if it's a regular move
         cells[move.getFromCell().getRank()][move.getFromCell().getFile()] = new cell(move.getFromCell().getRank(),move.getFromCell().getFile());
+        move.getFromCell().getPiece().setFirstMove(false);
         cells[move.getToCell().getRank()][move.getToCell().getFile()].setPiece(move.getFromCell().getPiece());
 
         // TODO
         // check mate and stale mate ,pawn promotion , check , enpassant cases
+
+
+        //checkPinnedPieces();
     }
 
 
@@ -81,6 +85,19 @@ public class Board {
                     cells[i][j] = new cell (i,j, getPieceBasedOnCode(cellsCode[i][j],color));
                 } else{
                     cells[i][j] = new cell (i,j);
+                }
+            }
+        }
+    }
+
+    // method to check if there are any pinned pieces for a specific player ; this method should be executed after every move
+    private void checkPinnedPieces (){
+        for ( cell[] row : cells) {
+            for (cell cell : row) {
+                if (cell.getPiece() != null) {
+                         if (cell.getPiece().checkPinnedPieces(cell,this) != null){
+                             cell.getPiece().checkPinnedPieces(cell,this).get(0).getPiece().setPinned(true);
+                         }
                 }
             }
         }
@@ -120,6 +137,13 @@ public class Board {
     }
 
 
+    public cell getEnPassant() {
+        return enPassant;
+    }
+
+    public void setEnPassant(cell enPassant) {
+        this.enPassant = enPassant;
+    }
     @Override
     public String toString() {
             StringBuilder sb = new StringBuilder();
@@ -132,13 +156,7 @@ public class Board {
             return sb.toString();
     }
 
-    public cell getEnPassant() {
-        return enPassant;
-    }
 
-    public void setEnPassant(cell enPassant) {
-        this.enPassant = enPassant;
-    }
 
 
 
