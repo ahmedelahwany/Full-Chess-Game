@@ -27,15 +27,9 @@ public class Move {
         return fromCell;
     }
 
-    public void setFromCell(cell fromCell) {
-        this.fromCell = fromCell;
-    }
 
     public cell getToCell() {
         return ToCell;
     }
 
-    public void setToCell(cell toCell) {
-        ToCell = toCell;
-    }
 }

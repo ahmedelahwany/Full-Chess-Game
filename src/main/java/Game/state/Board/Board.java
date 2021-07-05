@@ -3,6 +3,7 @@ package Game.state.Board;
 import Game.state.Move;
 import Game.state.pieces.*;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -59,15 +60,30 @@ public class Board {
     public void executeMove(Move move) {
         move.getFromCell().getPiece().validateMove(move,this);
         // if it's a regular move
-        cells[move.getFromCell().getRank()][move.getFromCell().getFile()] = new cell(move.getFromCell().getRank(),move.getFromCell().getFile());
-        move.getFromCell().getPiece().setFirstMove(false);
-        cells[move.getToCell().getRank()][move.getToCell().getFile()].setPiece(move.getFromCell().getPiece());
+
+
+
+        if (lastMoveType == Move.moveType.REGULAR)
+        {
+           updateKingPositions(move);
+           changePiecePosition(move.getFromCell(),move.getFromCell());
+        }
+         else if (lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
+            updateKingPositions(move);
+            changePiecePosition(move.getFromCell(),move.getToCell());
+            changePiecePosition(cells[move.getFromCell().getRank()][move.getFromCell().getFile()-4],cells[move.getFromCell().getRank()][move.getFromCell().getFile()-1]);
+        }
+        else if (lastMoveType == Move.moveType.CASTLE_KING_SIDE){
+            updateKingPositions(move);
+            changePiecePosition(move.getFromCell(),move.getToCell());
+            changePiecePosition(cells[move.getFromCell().getRank()][move.getFromCell().getFile()+3],cells[move.getFromCell().getRank()][move.getFromCell().getFile()+1]);
+        }
 
         // TODO
         // check mate and stale mate ,pawn promotion , check , enpassant cases
 
 
-        //checkPinnedPieces();
+        checkPinnedPieces();
     }
 
 
@@ -100,6 +116,23 @@ public class Board {
                 }
             }
         }
+    }
+
+    // updating the king positions props in the board class
+    private void updateKingPositions(Move move) {
+        if (move.getFromCell().getPiece().getType() == Piece.Type.KING) {
+            if (move.getFromCell().getPiece().getColor() == Piece.Color.WHITE) {
+                setwKingPosition(move.getToCell());
+            } else {
+                setbKingPosition(move.getToCell());
+            }
+        }
+    }
+
+    private void changePiecePosition ( cell fromPos , cell toPos){
+        cells[fromPos.getRank()][fromPos.getFile()] = new cell(fromPos.getRank(),fromPos.getFile());
+        fromPos.getPiece().setFirstMove(false);
+        cells[toPos.getRank()][toPos.getFile()].setPiece(fromPos.getPiece());
     }
 
     private Piece getPieceBasedOnCode(int i, Piece.Color color) {

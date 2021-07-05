@@ -26,18 +26,20 @@ public class Knight extends Piece {
        Color currentPlayerColor = move.getFromCell().getPiece().getColor();
         this.possibleMoves.clear();
         this.RegularMoves.clear();
-        for (int i = 0; i < 8; i++) {
+     if(getPinningPiece() != null){ // if knight is pinned , it Can't move anyway
+         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 int x = Math.abs(move.getFromCell().getRank() - i);
                 int y = Math.abs(move.getFromCell().getFile() - j);
                 Color opponentPlayerColor = board.getCells()[i][j].getPiece() == null ? null : board.getCells()[i][j].getPiece().getColor();
                 if(x * y == 2) this.RegularMoves.add(board.getCells()[i][j]);
-                if (x * y == 2 && (opponentPlayerColor != currentPlayerColor))
+                if (x * y == 2 && (opponentPlayerColor != currentPlayerColor) )
                     {
                         this.possibleMoves.add(board.getCells()[i][j]);
                     }
             }
         }
+     }
         return this.possibleMoves;
     }
 

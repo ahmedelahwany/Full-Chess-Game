@@ -3,7 +3,6 @@ package Game.state.pieces;
 import Game.state.Board.Board;
 import Game.state.Board.cell;
 import Game.state.Move;
-import com.google.inject.internal.cglib.core.$MethodInfoTransformer;
 
 import java.util.ArrayList;
 
@@ -31,68 +30,90 @@ public class Rock extends Piece{
         this.RegularMoves.clear();
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 
-       while(iterator + fromCellFile < Board.DIMENSION ){
+        int rankPinningDirection = 3;
+        int filePinningDirection = 3;
 
-           cell possibleCell = board.getCells()[fromCellRank][fromCellFile+iterator];
-           if ( possibleCell.getPiece() != null) {
-               this.RegularMoves.add(possibleCell);
-               if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                   this.possibleMoves.add(possibleCell);
-               }
-               break;
-           }
-           this.RegularMoves.add(possibleCell);
-           this.possibleMoves.add(possibleCell);
-           iterator++;
-       }
-       iterator = 1;
-
-        while(fromCellFile - iterator >= 0){
-
-            cell possibleCell = board.getCells()[fromCellRank][fromCellFile-iterator];
-            if ( possibleCell.getPiece() != null) {
-                this.RegularMoves.add(possibleCell);
-                if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                    this.possibleMoves.add(possibleCell);
-                }
-                break;
+        if(this.getPinningPiece() != null){
+            if( getPinningPiece().getRank() - fromCellRank == 0) // checking if the pinning piece is on the same rank as the Rook
+            {
+                rankPinningDirection = 0;
+            } else if(getPinningPiece().getFile() - fromCellFile == 0){ // checking if the pinning piece is on the same File as the Rook
+                filePinningDirection = 0;
             }
-            this.RegularMoves.add(possibleCell);
-            this.possibleMoves.add(possibleCell);
-            iterator++;
+            else {  // pinning piece is not in not is the same Rank or File as the pinned piece ; this means no possible moves for the pinned piece
+                rankPinningDirection = 2;
+                filePinningDirection = 2;
+            }
+        }
+        if(rankPinningDirection == 0 || rankPinningDirection == 3 ) {
+            while (iterator + fromCellFile < Board.DIMENSION) {
+
+                cell possibleCell = board.getCells()[fromCellRank][fromCellFile + iterator];
+                if (possibleCell.getPiece() != null) {
+                    this.RegularMoves.add(possibleCell);
+                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
+                        this.possibleMoves.add(possibleCell);
+                    }
+                    break;
+                }
+                this.RegularMoves.add(possibleCell);
+                this.possibleMoves.add(possibleCell);
+                iterator++;
+            }
+
+            iterator = 1;
+
+
+            while (fromCellFile - iterator >= 0) {
+
+                cell possibleCell = board.getCells()[fromCellRank][fromCellFile - iterator];
+                if (possibleCell.getPiece() != null) {
+                    this.RegularMoves.add(possibleCell);
+                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
+                        this.possibleMoves.add(possibleCell);
+                    }
+                    break;
+                }
+                this.RegularMoves.add(possibleCell);
+                this.possibleMoves.add(possibleCell);
+                iterator++;
+            }
+
+            iterator = 1;
+
         }
 
-        iterator = 1;
+        if(filePinningDirection == 0 || rankPinningDirection == 3 ) {
+            while (fromCellRank + iterator < Board.DIMENSION) {
 
-        while(fromCellRank + iterator < Board.DIMENSION){
-
-            cell possibleCell = board.getCells()[fromCellRank + iterator][fromCellFile];
-            if ( possibleCell.getPiece() != null) {
-                this.RegularMoves.add(possibleCell);
-                if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                    this.possibleMoves.add(possibleCell);
+                cell possibleCell = board.getCells()[fromCellRank + iterator][fromCellFile];
+                if (possibleCell.getPiece() != null) {
+                    this.RegularMoves.add(possibleCell);
+                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
+                        this.possibleMoves.add(possibleCell);
+                    }
+                    break;
                 }
-                break;
-            }
-            this.RegularMoves.add(possibleCell);
-            this.possibleMoves.add(possibleCell);
-            iterator++;
-        }
-        iterator = 1;
-
-        while(fromCellRank - iterator >= 0){
-
-            cell possibleCell = board.getCells()[fromCellRank - iterator][fromCellFile];
-            if ( possibleCell.getPiece() != null) {
                 this.RegularMoves.add(possibleCell);
-                if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                    this.possibleMoves.add(possibleCell);
-                }
-                break;
+                this.possibleMoves.add(possibleCell);
+                iterator++;
             }
-            this.RegularMoves.add(possibleCell);
-            this.possibleMoves.add(possibleCell);
-            iterator++;
+            iterator = 1;
+
+            while (fromCellRank - iterator >= 0) {
+
+                cell possibleCell = board.getCells()[fromCellRank - iterator][fromCellFile];
+                if (possibleCell.getPiece() != null) {
+                    this.RegularMoves.add(possibleCell);
+                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
+                        this.possibleMoves.add(possibleCell);
+                    }
+                    break;
+                }
+                this.RegularMoves.add(possibleCell);
+                this.possibleMoves.add(possibleCell);
+                iterator++;
+            }
         }
 
         return this.possibleMoves;
