@@ -110,16 +110,14 @@ public class Bishop extends Piece {
         return this.possibleMoves;
     }
 
-    public ArrayList<cell> checkPinnedPieces(cell position,Board board) {
+    public void checkPinnedPieces(cell position,Board board) {
 
         cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
         int OpponentKingRank = opponentKing.getRank();
         int OpponentKingFile = opponentKing.getFile();
 // check pinned pieces in the diagonal direction
         if (Math.abs(OpponentKingRank - position.getRank()) == 1 && Math.abs(OpponentKingFile - position.getFile()) == 1 ) {
-            return getPinnedPieces(position,board);
-        } else {
-            return null;
+            setPinnedPieces(position,board);
         }
     }
 

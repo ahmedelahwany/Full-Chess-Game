@@ -170,16 +170,14 @@ public class Queen extends Piece {
     }
 
     @Override
-    public ArrayList<cell> checkPinnedPieces(cell position, Board board) {
+    public void checkPinnedPieces(cell position, Board board) {
         cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
         int OpponentKingRank = opponentKing.getRank();
         int OpponentKingFile = opponentKing.getFile();
 
         if ((Math.abs(OpponentKingRank - position.getRank()) == 1 && Math.abs(OpponentKingFile - position.getFile()) == 1) ||
             (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile())) {
-            return getPinnedPieces(position,board);
-        } else {
-            return null;
+             setPinnedPieces(position,board);
         }
     }
 

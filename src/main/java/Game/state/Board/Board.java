@@ -95,9 +95,8 @@ public class Board {
         for ( cell[] row : cells) {
             for (cell cell : row) {
                 if (cell.getPiece() != null) {
-                         if (cell.getPiece().checkPinnedPieces(cell,this) != null){
-                             cell.getPiece().checkPinnedPieces(cell,this).get(0).getPiece().setPinned(true);
-                         }
+                             cell.getPiece().setPinningPiece(null); // resetting pinning piece property for all pieces
+                             cell.getPiece().checkPinnedPieces(cell,this); // checking if there is any pinning piece for every piece after every move over the board
                 }
             }
         }
