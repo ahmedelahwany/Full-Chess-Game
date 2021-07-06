@@ -14,10 +14,10 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public boolean validateMove(Move move, Board board) {
+    public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        return getPossibleMoves(move,board).contains(move.getToCell());
+        getPossibleMoves(move, board);
 
     }
 
@@ -89,6 +89,7 @@ public class Bishop extends Piece {
 
 
          if (rankPinningDirection * filePinningDirection == -1 || rankPinningDirection == 0) {
+
              while (fromCellRank - iteratorX >= 0 && fromCellFile + iteratorY < Board.DIMENSION) {
 
                  cell possibleCell = board.getCells()[fromCellRank - iteratorX][fromCellFile + iteratorY];
@@ -134,8 +135,8 @@ public class Bishop extends Piece {
         int OpponentKingRank = opponentKing.getRank();
         int OpponentKingFile = opponentKing.getFile();
 // check pinned pieces in the diagonal direction
-        if (Math.abs(OpponentKingRank - position.getRank()) == 1 && Math.abs(OpponentKingFile - position.getFile()) == 1 ) {
-            setPinnedPieces(position,board);
+        if (Math.abs(OpponentKingRank - position.getRank()) == Math.abs(OpponentKingFile - position.getFile()) ) {
+            this.setPinnedPieces(position,board);
         }
     }
 

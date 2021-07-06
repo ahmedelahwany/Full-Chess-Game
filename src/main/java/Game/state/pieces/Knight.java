@@ -14,10 +14,10 @@ public class Knight extends Piece {
     }
 
     @Override
-    public boolean validateMove(Move move, Board board) {
+    public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        return getPossibleMoves(move,board).contains(move.getToCell());
+        getPossibleMoves(move, board);
     }
 
     @Override
@@ -26,7 +26,8 @@ public class Knight extends Piece {
        Color currentPlayerColor = move.getFromCell().getPiece().getColor();
         this.possibleMoves.clear();
         this.RegularMoves.clear();
-     if(getPinningPiece() != null){ // if knight is pinned , it Can't move anyway
+     if(this.getPinningPiece() == null){
+
          for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 int x = Math.abs(move.getFromCell().getRank() - i);

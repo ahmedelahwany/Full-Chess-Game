@@ -66,7 +66,7 @@ public class Board {
         if (lastMoveType == Move.moveType.REGULAR)
         {
            updateKingPositions(move);
-           changePiecePosition(move.getFromCell(),move.getFromCell());
+           changePiecePosition(move.getFromCell(),move.getToCell());
         }
          else if (lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
             updateKingPositions(move);
@@ -99,6 +99,13 @@ public class Board {
                         color= Piece.Color.BLACK;
                     }
                     cells[i][j] = new cell (i,j, getPieceBasedOnCode(cellsCode[i][j],color));
+                    if (cells[i][j].getPiece().getType() == Piece.Type.KING) {
+                        if (cells[i][j].getPiece().getColor() == Piece.Color.WHITE) {
+                            setwKingPosition(cells[i][j]);
+                        } else {
+                            setbKingPosition(cells[i][j]);
+                        }
+                    }
                 } else{
                     cells[i][j] = new cell (i,j);
                 }
@@ -106,13 +113,23 @@ public class Board {
         }
     }
 
-    // method to check if there are any pinned pieces for a specific player ; this method should be executed after every move
+    // method to check if there are any pinned pieces for a every player ; this method should be executed after every move
     private void checkPinnedPieces (){
+        restPinnedPiece();
         for ( cell[] row : cells) {
             for (cell cell : row) {
                 if (cell.getPiece() != null) {
-                             cell.getPiece().setPinningPiece(null); // resetting pinning piece property for all pieces
                              cell.getPiece().checkPinnedPieces(cell,this); // checking if there is any pinning piece for every piece after every move over the board
+                }
+            }
+        }
+    }
+
+    private void restPinnedPiece(){
+        for ( cell[] row : cells) {
+            for (cell cell : row) {
+                if (cell.getPiece() != null) {
+                    cell.getPiece().setPinningPiece(null); // resetting pinning piece property for all pieces
                 }
             }
         }

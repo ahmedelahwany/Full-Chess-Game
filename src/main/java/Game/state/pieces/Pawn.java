@@ -18,16 +18,16 @@ public class Pawn extends Piece {
 
 
     @Override
-    public boolean validateMove(Move move, Board board) {
+    public void validateMove(Move move, Board board) {
 
          if(this.twoCellsMoves.contains(move.getToCell())){
-             Board.lastMoveType = Move.moveType.PAWN_EN_PASSANT;
+             Board.lastMoveType = Move.moveType.REGULAR;
              board.setEnPassant(move.getToCell());
-         } else{
+         } else {
              Board.lastMoveType = Move.moveType.REGULAR;
              board.setEnPassant(null);
          }
-        return getPossibleMoves(move,board).contains(move.getToCell());
+        getPossibleMoves(move, board);
     }
 
     public ArrayList<cell> getAttackMoves() {

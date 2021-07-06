@@ -10,14 +10,14 @@ public abstract class Piece {
 
     protected ArrayList<cell> possibleMoves = new ArrayList<>();
     protected ArrayList<cell> RegularMoves = new ArrayList<>();
-    private cell pinningPiece;
+    private cell pinningPiece ;
 
     public enum Color {
         WHITE, BLACK
     }
 
     public cell getPinningPiece() {
-        return pinningPiece;
+        return this.pinningPiece;
     }
 
     public void setPinningPiece(cell pinningPiece) {
@@ -27,7 +27,7 @@ public abstract class Piece {
     public enum Type {
         KING, ROOK, BISHOP, QUEEN, KNIGHT, PAWN
     }
-    private boolean firstMove = true;
+    private boolean firstMove;
 
 
 
@@ -45,10 +45,11 @@ public abstract class Piece {
 
     public Piece(Color color) {
         this.color = color;
-
+        this.pinningPiece = null;
+        this.firstMove = true;
     }
 
-    public abstract boolean validateMove(Move move , Board board);
+    public abstract void validateMove(Move move , Board board);
 
     // to check if bishop,Rock or Queen pin a specific opponent's piece to the opponent's king
     // pinned pieces can't move at all
@@ -66,12 +67,15 @@ public abstract class Piece {
         int directionFile = OpponentKingFile > position.getFile() ? 1 : -1;
 
 
-        for (int i = position.getRank(), j = position.getFile(); i < OpponentKingRank && j < OpponentKingFile; i = i + directionRank, j = j + directionFile) {
-            if (board.getCells()[i][j].getPiece().getColor() == opponentColor) {
-                cells.add(board.getCells()[i][j]); // pinned pieces as a first element in the array
+
+        for (int i = directionRank * position.getRank(), j = directionFile * position.getFile(); i < OpponentKingRank * directionRank && j < OpponentKingFile * directionFile; i++, j++) {
+            if (board.getCells()[Math.abs(i)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(j)].getPiece().getColor() == opponentColor) {
+                cells.add(board.getCells()[Math.abs(i)][Math.abs(j)]); // pinned pieces as a first element in the array
             }
         }
         if (cells.size() == 1){
+            System.out.println("asda");
+            System.out.println(cells.get(0).getPiece());
             cells.get(0).getPiece().setPinningPiece(position);
             // for a piece to be pinned to a king , it has to be the only piece in the way from the attacking piece to the king.
         }

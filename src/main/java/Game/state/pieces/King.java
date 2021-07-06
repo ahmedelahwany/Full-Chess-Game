@@ -9,9 +9,7 @@ import java.util.ArrayList;
 
 public class King extends Piece {
 
-    private cell kingSideCastleMove  ;
 
-    private cell QueenSideCastleMove ;
 
     public King(Color color) {
         super(color);
@@ -19,13 +17,13 @@ public class King extends Piece {
     }
 
     @Override
-    public boolean validateMove(Move move, Board board) {
+    public void validateMove(Move move, Board board) {
 
         if(this.getPossibleMoves(move,board).contains(move.getToCell())){
-            if( kingSideCastleMove != null){
+            if( move.getToCell().getFile() - move.getFromCell().getFile() == 2){
                 Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
                 board.setEnPassant(null);
-            } else if (QueenSideCastleMove != null){
+            } else if (move.getFromCell().getFile() - move.getToCell().getFile() == 2){
                 Board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
                 board.setEnPassant(null);
             } else {
@@ -33,9 +31,7 @@ public class King extends Piece {
                 board.setEnPassant(null);
             }
 
-            return true;
         } else {
-            return  false;
         }
     }
 
@@ -47,8 +43,7 @@ public class King extends Piece {
         int KingRank = move.getFromCell().getRank();
         int KingFile = move.getFromCell().getFile();
         this.possibleMoves.clear();
-        kingSideCastleMove = null;
-        QueenSideCastleMove = null;
+
         this.RegularMoves.clear();
         int defaultRookRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 7 : 0;
 
@@ -72,11 +67,11 @@ public class King extends Piece {
             }
 
         // check for castling moves (King side  and queen side )
-        int [][] castlingDataForIteration = {{3,2},{-4,3}};
+        int [][] castlingDataForIteration = {{7,2},{0,3}};
         for (int[] ints : castlingDataForIteration) {
-            int direction = ints[0] == 3 ? 1 : -1;
+            int direction = ints[0] == 7 ? 1 : -1;
             boolean castleValid = false;
-            Piece rockPosition = board.getCells()[defaultRookRank][KingFile + ints[0]].getPiece();
+            Piece rockPosition = board.getCells()[defaultRookRank][ints[0]].getPiece();
             if (rockPosition != null) {
                 if (this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked(move.getFromCell(), board)) {
                     castleValid = true;
@@ -90,11 +85,7 @@ public class King extends Piece {
             }
             if (castleValid) {
                 this.possibleMoves.add(new cell(defaultRookRank, KingFile + direction * 2));
-                if(ints[0] == 3) {
-                    kingSideCastleMove = new cell(defaultRookRank, KingFile + direction * 2);
-                } else {
-                    QueenSideCastleMove = new cell(defaultRookRank, KingFile + direction * 2);
-                }
+
             }
         }
 

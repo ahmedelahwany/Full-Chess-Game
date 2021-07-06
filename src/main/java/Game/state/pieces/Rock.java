@@ -13,10 +13,10 @@ public class Rock extends Piece{
     }
 
     @Override
-    public boolean validateMove(Move move, Board board) {
+    public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        return getPossibleMoves(move,board).contains(move.getToCell());
+        getPossibleMoves(move, board);
 
     }
 
@@ -127,7 +127,7 @@ public class Rock extends Piece{
         int OpponentKingFile = opponentKing.getFile();
 // check pinned pieces in straight directions (Row And Column)
         if (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile() ){
-              setPinnedPieces(position,board);
+              this.setPinnedPieces(position,board);
         }
     }
 

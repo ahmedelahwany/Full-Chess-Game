@@ -14,10 +14,10 @@ public class Queen extends Piece {
     }
 
     @Override
-    public boolean validateMove(Move move, Board board) {
+    public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        return getPossibleMoves(move,board).contains(move.getToCell());
+        getPossibleMoves(move, board);
 
     }
 
@@ -211,7 +211,7 @@ public class Queen extends Piece {
         int OpponentKingRank = opponentKing.getRank();
         int OpponentKingFile = opponentKing.getFile();
 
-        if ((Math.abs(OpponentKingRank - position.getRank()) == 1 && Math.abs(OpponentKingFile - position.getFile()) == 1) ||
+        if ((Math.abs(OpponentKingRank - position.getRank()) == Math.abs(OpponentKingFile - position.getFile())) ||
             (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile())) {
              setPinnedPieces(position,board);
         }

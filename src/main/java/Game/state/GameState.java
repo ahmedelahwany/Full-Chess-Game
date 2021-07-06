@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 
+import static Game.state.Board.Board.lastMoveType;
+
 /**
  * Class representing the state of the puzzle.
  */
@@ -93,17 +95,36 @@ public class GameState {
     }
 
     public void executeMove(Move move) {
+
+
         move.getFromCell().getPiece().validateMove(move,board);
-        INITIAL[move.getFromCell().getRank()][move.getFromCell().getFile()] = 30;
-        INITIAL[move.getToCell().getRank()][move.getToCell().getFile()] = move.getFromCell().getPiece().getCode();
 
-        board.executeMove( move);
+        if (lastMoveType == Move.moveType.REGULAR)
+       {
+           changePiecePositionInState(move.getFromCell(),move.getToCell());
+       }
+        else if (lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
+            changePiecePositionInState(move.getFromCell(),move.getToCell());
+            changePiecePositionInState(board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()-4],
+                                       board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()-1]);
+        }
+        else if (lastMoveType == Move.moveType.CASTLE_KING_SIDE){
+            changePiecePositionInState(move.getFromCell(),move.getToCell());
+            changePiecePositionInState(board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()+3],
+                                       board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()+1]);
+        }
 
+        board.executeMove(move);
     }
 
 
 
 
+
+    private void changePiecePositionInState ( cell fromPos , cell toPos){
+        INITIAL[fromPos.getRank()][fromPos.getFile()] = 30;
+        INITIAL[toPos.getRank()][toPos.getFile()] =  fromPos.getPiece().getCode();
+    }
     /**
      * Checks whether the game is finished.
      *
