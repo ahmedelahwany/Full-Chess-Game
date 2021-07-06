@@ -30,24 +30,22 @@ public class Rock extends Piece{
         this.RegularMoves.clear();
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 
-        int rankPinningDirection = 3;
-        int filePinningDirection = 3;
+        boolean rankPinned= false; // rock can't move on the ranks because of pinning
+        boolean filePinned = false; // rock can't move on the files because of pinning
 
         if(this.getPinningPiece() != null){
             if( getPinningPiece().getRank() - fromCellRank == 0) // checking if the pinning piece is on the same rank as the Rook
             {
-                rankPinningDirection = 0;
-                filePinningDirection = 2;
+                filePinned = true;
             } else if(getPinningPiece().getFile() - fromCellFile == 0){ // checking if the pinning piece is on the same File as the Rook
-                filePinningDirection = 0;
-                rankPinningDirection = 2;
+               rankPinned = true;
             }
             else {  // pinning piece is not in not is the same Rank or File as the pinned piece ; this means no possible moves for the pinned piece
-                rankPinningDirection = 2;
-                filePinningDirection = 2;
+                filePinned = true ;
+                rankPinned = true;
             }
         }
-        if(rankPinningDirection == 0 || rankPinningDirection == 3 ) {
+        if(rankPinned || !filePinned) {
             while (iterator + fromCellFile < Board.DIMENSION) {
 
                 cell possibleCell = board.getCells()[fromCellRank][fromCellFile + iterator];
@@ -85,7 +83,7 @@ public class Rock extends Piece{
 
         }
 
-        if(filePinningDirection == 0 || rankPinningDirection == 3 ) {
+        if(filePinned|| !rankPinned ) {
             while (fromCellRank + iterator < Board.DIMENSION) {
 
                 cell possibleCell = board.getCells()[fromCellRank + iterator][fromCellFile];

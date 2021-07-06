@@ -3,9 +3,7 @@ package Game.state.Board;
 import Game.state.Move;
 import Game.state.pieces.*;
 
-import java.time.Year;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Board {
 
@@ -47,7 +45,7 @@ public class Board {
     }
 
 
-    public Board(int cellsCode[][]) {
+    public Board(int[][] cellsCode) {
 
         build(cellsCode);
     }

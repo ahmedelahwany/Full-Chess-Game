@@ -42,8 +42,21 @@ public class Pawn extends Piece {
         this.possibleMoves.clear();
         this.RegularMoves.clear();
         this.twoCellsMoves.clear();
+
+        // pinning logic setup
+        boolean filePinned = false; // pawn can't move on the files because of pinning
+
+        if(this.getPinningPiece() != null){
+            if( getPinningPiece().getFile() - fromCellFile != 0) // checking if the pinning piece is on the same file as the Rook
+            { // pinning piece is not in not is the same File as the pawn; this means no possible moves for the pawn
+                filePinned = true ;
+            }
+        }
+
         // one cell forward move
-        if((isWithinTheRange(fromCellRank + direction,fromCellFile)))
+        if(!filePinned) // if file pinned base of the previous logic , pawn can't move forward
+       {
+           if((isWithinTheRange(fromCellRank + direction,fromCellFile)))
        {
            cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile];
            if(possibleCell.getPiece() == null)
@@ -57,8 +70,9 @@ public class Pawn extends Piece {
                     this.possibleMoves.add(possibleCell);
                     this.twoCellsMoves.add(possibleCell);
             }
+       }
         // capture Right move with respect to the capturing pawn
-        if((isWithinTheRange(fromCellRank + direction,fromCellFile + 1)))
+        if(isWithinTheRange(fromCellRank + direction,fromCellFile + 1) && this.getPinningPiece()== null ) // if a pawn is pinned to its king , it can't attack left or right
         {
             cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile + 1];
             this.RegularMoves.add(possibleCell);
@@ -77,7 +91,7 @@ public class Pawn extends Piece {
         }
 
         // capture Left move with respect to the capturing pawn
-        if((isWithinTheRange(fromCellRank + direction,fromCellFile - 1)))
+        if(isWithinTheRange(fromCellRank + direction,fromCellFile - 1)  && this.getPinningPiece() == null )
 
         {
             cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile - 1];
