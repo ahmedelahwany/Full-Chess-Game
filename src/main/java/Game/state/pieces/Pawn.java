@@ -72,16 +72,18 @@ public class Pawn extends Piece {
             }
        }
         // capture Right move with respect to the capturing pawn
-        if(isWithinTheRange(fromCellRank + direction,fromCellFile + 1) && this.getPinningPiece()== null ) // if a pawn is pinned to its king , it can't attack left or right
+        if(isWithinTheRange(fromCellRank + direction,fromCellFile + 1) && this.getPinningPiece()== null ||(filePinned )) // if a pawn is pinned to its king , it can't attack left or right
         {
             cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile + 1];
             this.RegularMoves.add(possibleCell);
             if(possibleCell.getPiece() != null )
             {
-                if(possibleCell.getPiece().getColor() != currentPlayerColor)
+                if(( this.getPinningPiece() == null && possibleCell.getPiece().getColor() != currentPlayerColor) ||
+                   (filePinned && possibleCell.getPiece().getType() == this.getPinningPiece().getPiece().getType()))// to count for the case when the pawn is pinned by Bishop or a queen on the diagonal direction(right)
                     this.possibleMoves.add(possibleCell);
             } else{
-                if(board.getEnPassant() != null){
+                if(board.getEnPassant() != null && (this.getPinningPiece() == null || // to check if the enpassant move is in the same diagonal as the pinning piece . if so, the enpassant is valid move
+                                                    Math.abs(possibleCell.getRank() - getPinningPiece().getRank()) == Math.abs(possibleCell.getFile() - getPinningPiece().getFile()))){
                     System.out.println(board.getEnPassant());
                     if(board.getEnPassant().getFile() - fromCellFile == 1 && board.getEnPassant().getRank() == fromCellRank){
                         this.possibleMoves.add(possibleCell);
@@ -91,17 +93,19 @@ public class Pawn extends Piece {
         }
 
         // capture Left move with respect to the capturing pawn
-        if(isWithinTheRange(fromCellRank + direction,fromCellFile - 1)  && this.getPinningPiece() == null )
+        if(isWithinTheRange(fromCellRank + direction,fromCellFile - 1)  && this.getPinningPiece() == null ||(filePinned))
 
         {
             cell possibleCell = board.getCells()[fromCellRank + direction][fromCellFile - 1];
             this.RegularMoves.add(possibleCell);
             if(possibleCell.getPiece() != null )
             {
-                if(possibleCell.getPiece().getColor() != currentPlayerColor)
+                if(( this.getPinningPiece() == null && possibleCell.getPiece().getColor() != currentPlayerColor) ||
+                   (filePinned && possibleCell.getPiece().getType()== this.getPinningPiece().getPiece().getType()))// to count for the case when the pawn is pinned by Bishop or a queen on the diagonal direction(left))
                     this.possibleMoves.add(possibleCell);
             } else {
-                if(board.getEnPassant() != null){
+                if(board.getEnPassant() != null && (this.getPinningPiece() == null || // to check if the enpassant move is in the same diagonal as the pinning piece . if so, the enpassant is valid move
+                                                    Math.abs(possibleCell.getRank() - getPinningPiece().getRank()) == Math.abs(possibleCell.getFile() - getPinningPiece().getFile()))){
                     if(fromCellFile - board.getEnPassant().getFile() == 1 && board.getEnPassant().getRank() == fromCellRank){
                         this.possibleMoves.add(possibleCell);
                     }
