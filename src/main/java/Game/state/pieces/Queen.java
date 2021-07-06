@@ -40,8 +40,10 @@ public class Queen extends Piece {
             if( getPinningPiece().getRank() - fromCellRank == 0) // checking if the pinning piece is on the same rank as the Rook
             {
                 rankPinningDirection = 0;
+                filePinningDirection = 2;
             } else if(getPinningPiece().getFile() - fromCellFile == 0){ // checking if the pinning piece is on the same File as the Rook
                 filePinningDirection = 0;
+                rankPinningDirection = 2;
             }
             else if(Math.abs(getPinningPiece().getRank() - fromCellRank) == Math.abs(getPinningPiece().getFile() - fromCellFile)){
                 rankPinningDirection = getPinningPiece().getRank() - fromCellRank > 0 ? 1 : -1;
@@ -211,9 +213,11 @@ public class Queen extends Piece {
         int OpponentKingRank = opponentKing.getRank();
         int OpponentKingFile = opponentKing.getFile();
 
-        if ((Math.abs(OpponentKingRank - position.getRank()) == Math.abs(OpponentKingFile - position.getFile())) ||
-            (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile())) {
-             setPinnedPieces(position,board);
+        if (Math.abs(OpponentKingRank - position.getRank()) == Math.abs(OpponentKingFile - position.getFile())){
+            setPinnedPiecesForBishop(position,board);
+        }
+        else if (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile()){
+             setPinnedPiecesForRock(position,board);
         }
     }
 

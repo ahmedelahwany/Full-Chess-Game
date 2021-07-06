@@ -56,9 +56,9 @@ public abstract class Piece {
     public void checkPinnedPieces(cell position ,Board board){}
 
 
-    protected  void setPinnedPieces(cell position , Board board){
+    protected  void setPinnedPiecesForBishop(cell position , Board board) {
         ArrayList<cell> cells = new ArrayList<>();
-        cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
+        cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() : board.getwKingPosition();
         Color opponentColor = opponentKing.getPiece().getColor();
         int OpponentKingRank = opponentKing.getRank();
         int OpponentKingFile = opponentKing.getFile();
@@ -66,21 +66,51 @@ public abstract class Piece {
         int directionRank = OpponentKingRank > position.getRank() ? 1 : -1;
         int directionFile = OpponentKingFile > position.getFile() ? 1 : -1;
 
-
-
         for (int i = directionRank * position.getRank(), j = directionFile * position.getFile(); i < OpponentKingRank * directionRank && j < OpponentKingFile * directionFile; i++, j++) {
             if (board.getCells()[Math.abs(i)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(j)].getPiece().getColor() == opponentColor) {
                 cells.add(board.getCells()[Math.abs(i)][Math.abs(j)]); // pinned pieces as a first element in the array
             }
         }
-        if (cells.size() == 1){
+        if (cells.size() == 1) {
             System.out.println("asda");
-            System.out.println(cells.get(0).getPiece());
             cells.get(0).getPiece().setPinningPiece(position);
             // for a piece to be pinned to a king , it has to be the only piece in the way from the attacking piece to the king.
         }
     }
+    protected  void setPinnedPiecesForRock(cell position , Board board) {
+        ArrayList<cell> cells = new ArrayList<>();
+        cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() : board.getwKingPosition();
+        Color opponentColor = opponentKing.getPiece().getColor();
+        int OpponentKingRank = opponentKing.getRank();
+        int OpponentKingFile = opponentKing.getFile();
 
+        int directionRank = OpponentKingRank > position.getRank() ? 1 : -1;
+        int directionFile = OpponentKingFile > position.getFile() ? 1 : -1;
+
+        if(OpponentKingFile == position.getFile())
+       {
+           for (int i = directionRank * position.getRank(); i < OpponentKingRank * directionRank ; i++) {
+             int j = OpponentKingFile;
+            if (board.getCells()[Math.abs(i)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(j)].getPiece().getColor() == opponentColor) {
+                cells.add(board.getCells()[Math.abs(i)][Math.abs(j)]); // pinned pieces as a first element in the array
+            }
+        }
+       }
+        if(OpponentKingRank == position.getRank())
+        {
+            for (int j = directionFile * position.getFile(); j < OpponentKingFile * directionFile ; j++) {
+                int i = OpponentKingRank;
+                if (board.getCells()[Math.abs(i)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(j)].getPiece().getColor() == opponentColor) {
+                    cells.add(board.getCells()[Math.abs(i)][Math.abs(j)]); // pinned pieces as a first element in the array
+                }
+            }
+        }
+        if (cells.size() == 1) {
+            System.out.println("asda");
+            cells.get(0).getPiece().setPinningPiece(position);
+            // for a piece to be pinned to a king , it has to be the only piece in the way from the attacking piece to the king.
+        }
+    }
 
     public abstract ArrayList<cell> getPossibleMoves(Move move , Board board);
 

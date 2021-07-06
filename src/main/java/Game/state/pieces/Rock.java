@@ -37,8 +37,10 @@ public class Rock extends Piece{
             if( getPinningPiece().getRank() - fromCellRank == 0) // checking if the pinning piece is on the same rank as the Rook
             {
                 rankPinningDirection = 0;
+                filePinningDirection = 2;
             } else if(getPinningPiece().getFile() - fromCellFile == 0){ // checking if the pinning piece is on the same File as the Rook
                 filePinningDirection = 0;
+                rankPinningDirection = 2;
             }
             else {  // pinning piece is not in not is the same Rank or File as the pinned piece ; this means no possible moves for the pinned piece
                 rankPinningDirection = 2;
@@ -127,7 +129,8 @@ public class Rock extends Piece{
         int OpponentKingFile = opponentKing.getFile();
 // check pinned pieces in straight directions (Row And Column)
         if (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile() ){
-              this.setPinnedPieces(position,board);
+            System.out.println("ewed");
+              this.setPinnedPiecesForRock(position,board);
         }
     }
 

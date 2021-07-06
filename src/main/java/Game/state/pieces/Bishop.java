@@ -136,7 +136,7 @@ public class Bishop extends Piece {
         int OpponentKingFile = opponentKing.getFile();
 // check pinned pieces in the diagonal direction
         if (Math.abs(OpponentKingRank - position.getRank()) == Math.abs(OpponentKingFile - position.getFile()) ) {
-            this.setPinnedPieces(position,board);
+            this.setPinnedPiecesForBishop(position,board);
         }
     }
 
