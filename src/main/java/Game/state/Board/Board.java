@@ -31,15 +31,10 @@ public class Board {
                 if (cell.getPiece() != null)
                {
                    if(cell.getPiece().getColor() == playerColor){
-                       if(cell.getPiece().getType() == Piece.Type.PAWN){
-                           cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this);
-                           Pawn pawn = (Pawn) cell.getPiece();
-                           this.attackedCellsByOpponent.addAll(pawn.getAttackMoves());
-                    }
-                    else if (cell.getPiece().getType() == Piece.Type.KING) {
+                    if (cell.getPiece().getType() == Piece.Type.KING) {
                            King king = (King) cell.getPiece();
                            this.attackedCellsByOpponent.addAll(king.getRegularMoves(new Move(cell,new cell (0,0)),this));
-                    } else {
+                       } else {
                            cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this);
                            this.attackedCellsByOpponent.addAll(cell.getPiece().getRegularMoves());
                        }

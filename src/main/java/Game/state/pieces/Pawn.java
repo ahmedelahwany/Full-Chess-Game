@@ -13,7 +13,6 @@ public class Pawn extends Piece {
         this.setType(Type.PAWN);
     }
 
-    private ArrayList<cell> attackMoves = new ArrayList<>();
     private ArrayList<cell> twoCellsMoves = new ArrayList<>();
 
 
@@ -30,9 +29,6 @@ public class Pawn extends Piece {
         getPossibleMoves(move, board);
     }
 
-    public ArrayList<cell> getAttackMoves() {
-        return attackMoves;
-    }
 
     @Override
     public ArrayList<cell> getPossibleMoves(Move move, Board board) {
@@ -45,7 +41,6 @@ public class Pawn extends Piece {
         currentPlayerColor = move.getFromCell().getPiece().getColor();
         this.possibleMoves.clear();
         this.RegularMoves.clear();
-        this.attackMoves.clear();
         this.twoCellsMoves.clear();
         // one cell forward move
         if((isWithinTheRange(fromCellRank + direction,fromCellFile)))
@@ -71,7 +66,6 @@ public class Pawn extends Piece {
             {
                 if(possibleCell.getPiece().getColor() != currentPlayerColor)
                     this.possibleMoves.add(possibleCell);
-                    this.attackMoves.add(possibleCell);
             } else{
                 if(board.getEnPassant() != null){
                     System.out.println(board.getEnPassant());
@@ -92,7 +86,6 @@ public class Pawn extends Piece {
             {
                 if(possibleCell.getPiece().getColor() != currentPlayerColor)
                     this.possibleMoves.add(possibleCell);
-                    this.attackMoves.add(possibleCell);
             } else {
                 if(board.getEnPassant() != null){
                     if(fromCellFile - board.getEnPassant().getFile() == 1 && board.getEnPassant().getRank() == fromCellRank){
