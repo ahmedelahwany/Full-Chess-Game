@@ -112,7 +112,34 @@ public abstract class Piece {
         }
     }
 
-    public abstract ArrayList<cell> getPossibleMoves(Move move , Board board);
+    protected boolean checkIfPieceDefendKing(Board board , Move possibleMove ,cell KingPosition){
+        boolean oldFirstMove = possibleMove.getFromCell().getPiece().isFirstMove();
+        cell currentEnpasantCell = board.getEnPassant();
+        Move.moveType lastMoveType = Board.lastMoveType;
+        boolean pieceDefend = false;
+            board.executeMove(possibleMove);
+            King king = (King) KingPosition.getPiece();
+            if(!king.isChecked(KingPosition , board)){
+                pieceDefend = true;
+            }
+            board.undoMove(possibleMove,oldFirstMove,lastMoveType,currentEnpasantCell);
+            return pieceDefend;
+    }
+    // adding possible move is possible only if the king is not under check or if the king is under check while the piece can defend it
+    protected void AddPossibleMove (Board board ,Move move , cell possibleCell ,boolean possible) {
+        cell ownKing = this.getColor() == Color.WHITE ? board.getwKingPosition() : board.getbKingPosition();
+        King king = (King) ownKing.getPiece();
+      if (possible) { if (king.isChecked(ownKing, board)) {
+          System.out.println("sad");
+            if (this.checkIfPieceDefendKing(board, new Move(move.getFromCell(), possibleCell), ownKing)) {
+                System.out.println("asa");
+                this.possibleMoves.add(possibleCell);
+            }
+        } else {
+            this.possibleMoves.add(possibleCell);
+        }}
+    }
+    public abstract ArrayList<cell> getPossibleMoves(Move move , Board board , boolean possible);
 
     public abstract int getCode();
 

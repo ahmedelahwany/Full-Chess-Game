@@ -16,12 +16,10 @@ public class Rock extends Piece{
     public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        getPossibleMoves(move, board);
-
     }
 
     @Override
-    public ArrayList<cell> getPossibleMoves(Move move, Board board) {
+    public ArrayList<cell> getPossibleMoves(Move move, Board board ,boolean possible) {
         Color currentPlayerColor;
         int fromCellFile = move.getFromCell().getFile();
         int fromCellRank = move.getFromCell().getRank();
@@ -52,12 +50,12 @@ public class Rock extends Piece{
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
 
@@ -70,12 +68,12 @@ public class Rock extends Piece{
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
 
@@ -90,12 +88,12 @@ public class Rock extends Piece{
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
             iterator = 1;
@@ -106,12 +104,12 @@ public class Rock extends Piece{
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
         }
@@ -127,8 +125,7 @@ public class Rock extends Piece{
         int OpponentKingFile = opponentKing.getFile();
 // check pinned pieces in straight directions (Row And Column)
         if (OpponentKingRank == position.getRank() || OpponentKingFile == position.getFile() ){
-            System.out.println("ewed");
-              this.setPinnedPiecesForRock(position,board);
+            this.setPinnedPiecesForRock(position,board);
         }
     }
 

@@ -17,11 +17,10 @@ public class Knight extends Piece {
     public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        getPossibleMoves(move, board);
     }
 
     @Override
-    public ArrayList<cell> getPossibleMoves(Move move, Board board) {
+    public ArrayList<cell> getPossibleMoves(Move move, Board board , boolean possible) {
 
        Color currentPlayerColor = move.getFromCell().getPiece().getColor();
         this.possibleMoves.clear();
@@ -36,7 +35,8 @@ public class Knight extends Piece {
                 if(x * y == 2) this.RegularMoves.add(board.getCells()[i][j]);
                 if (x * y == 2 && (opponentPlayerColor != currentPlayerColor) )
                     {
-                        this.possibleMoves.add(board.getCells()[i][j]);
+                        cell possibleCell = board.getCells()[i][j];
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
             }
         }

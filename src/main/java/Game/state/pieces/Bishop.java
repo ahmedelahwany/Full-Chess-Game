@@ -4,6 +4,7 @@ import Game.state.Board.Board;
 import Game.state.Board.cell;
 import Game.state.Move;
 
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
@@ -17,12 +18,10 @@ public class Bishop extends Piece {
     public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        getPossibleMoves(move, board);
-
     }
 
     @Override
-    public ArrayList<cell> getPossibleMoves(Move move, Board board) {
+    public ArrayList<cell> getPossibleMoves(Move move, Board board ,boolean possible) {
         Color currentPlayerColor;
         int fromCellFile = move.getFromCell().getFile();
         int fromCellRank = move.getFromCell().getRank();
@@ -57,12 +56,12 @@ public class Bishop extends Piece {
                     if ( possibleCell.getPiece() != null) {
                         this.RegularMoves.add(possibleCell);
                         if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                            this.possibleMoves.add(possibleCell);
+                            this.AddPossibleMove(board,move,possibleCell,possible);
                         }
                         break;
                     }
                     this.RegularMoves.add(possibleCell);
-                    this.possibleMoves.add(possibleCell);
+                    this.AddPossibleMove(board,move,possibleCell,possible);
                     iteratorX++;
                     iteratorY++;
                 }
@@ -74,12 +73,12 @@ public class Bishop extends Piece {
                 this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece() != null) {
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iteratorX++;
                 iteratorY++;
             }
@@ -96,12 +95,12 @@ public class Bishop extends Piece {
                  this.RegularMoves.add(possibleCell);
                  if (possibleCell.getPiece() != null) {
                      if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                         this.possibleMoves.add(possibleCell);
+                         this.AddPossibleMove(board,move,possibleCell,possible);
                      }
                      break;
                  }
                  this.RegularMoves.add(possibleCell);
-                 this.possibleMoves.add(possibleCell);
+                 this.AddPossibleMove(board,move,possibleCell,possible);
                  iteratorX++;
                  iteratorY++;
              }
@@ -115,12 +114,12 @@ public class Bishop extends Piece {
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iteratorX++;
                 iteratorY++;
             }

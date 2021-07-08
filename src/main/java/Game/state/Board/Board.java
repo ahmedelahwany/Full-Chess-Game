@@ -14,6 +14,8 @@ public class Board {
 
     public static Move.moveType lastMoveType;
 
+    private Piece lastCapturedPiece;
+
     private cell enPassant;
 
     private ArrayList<cell> attackedCellsByOpponent = new ArrayList<>();
@@ -22,27 +24,7 @@ public class Board {
 
     private cell[][] cells = new cell[8][8];
 
-    public ArrayList<cell> getAttackedCellsByOpponent(Piece.Color playerColor) {
-        this.attackedCellsByOpponent.clear();
-        for ( cell[] row : cells){
-            for (cell cell :row){
-                if (cell.getPiece() != null)
-               {
-                   if(cell.getPiece().getColor() == playerColor){
-                    if (cell.getPiece().getType() == Piece.Type.KING) {
-                           King king = (King) cell.getPiece();
-                           this.attackedCellsByOpponent.addAll(king.getRegularMoves(new Move(cell,new cell (0,0)),this));
-                       } else {
-                           cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this);
-                           this.attackedCellsByOpponent.addAll(cell.getPiece().getRegularMoves());
-                       }
-                }
-               }
-            }
-        }
 
-        return attackedCellsByOpponent;
-    }
 
 
     public Board(int[][] cellsCode) {
@@ -52,9 +34,10 @@ public class Board {
 
     public void executeMove(Move move) {
         move.getFromCell().getPiece().validateMove(move,this);
+
+        lastCapturedPiece = move.getToCell().getPiece();
+        // All game states are listed here , which are used to be able to update the board correctly
         // if it's a regular move
-
-
 
         if (lastMoveType == Move.moveType.REGULAR)
         {
@@ -70,15 +53,31 @@ public class Board {
             updateKingPositions(move);
             changePiecePosition(move.getFromCell(),move.getToCell());
             changePiecePosition(cells[move.getFromCell().getRank()][move.getFromCell().getFile()+3],cells[move.getFromCell().getRank()][move.getFromCell().getFile()+1]);
+        }  else if (lastMoveType == Move.moveType.PAWN_EN_PASSANT){
+            changePiecePosition(move.getFromCell(),move.getToCell());
+            cells[enPassant.getRank()][enPassant.getFile()] = new cell(enPassant.getRank(),enPassant.getFile());
+            enPassant = null;
         }
 
+        System.out.println(this);
         // TODO
         // check mate and stale mate ,pawn promotion , check , enpassant cases
 
 
         checkPinnedPieces();
+        
     }
 
+    // this method is used to undo moves after simulating executing moves on a board for checking if any piece can defend its king while checking if it's checkmated or nor
+    public void undoMove(Move move ,boolean oldFirstMove , Move.moveType lastMoveType , cell enPassantCell){
+        Board.lastMoveType = lastMoveType;
+        this.setEnPassant(enPassantCell);
+        move.getFromCell().getPiece().setFirstMove(oldFirstMove);
+        move.getFromCell().getPiece().setPinningPiece(null);
+        cells[move.getToCell().getRank()][move.getToCell().getFile()].setPiece(lastCapturedPiece);
+        cells[move.getFromCell().getRank()][move.getFromCell().getFile()].setPiece(move.getFromCell().getPiece());
+        System.out.println(this);
+    }
 
 
     private void build(int[][] cellsCode){
@@ -104,6 +103,40 @@ public class Board {
                 }
             }
         }
+    }
+
+    public ArrayList<cell> getAttackedCellsByOpponent(Piece.Color playerColor) {
+        this.attackedCellsByOpponent.clear();
+        for ( cell[] row : cells){
+            for (cell cell :row){
+                if (cell.getPiece() != null)
+                {
+                    if(cell.getPiece().getColor() == playerColor){
+                        if (cell.getPiece().getType() == Piece.Type.KING) {
+                            King king = (King) cell.getPiece();
+                            this.attackedCellsByOpponent.addAll(king.getRegularMoves(new Move(cell,new cell (0,0)),this));
+                        } else {
+                            cell.getPiece().getPossibleMoves(new Move(cell,new cell (0,0)),this,false);
+                            this.attackedCellsByOpponent.addAll(cell.getPiece().getRegularMoves());
+                        }
+                    }
+                }
+            }
+        }
+
+        return attackedCellsByOpponent;
+    }
+
+    public ArrayList<cell> getAllPossibleMove(Piece.Color playerColor) {
+        ArrayList<cell> possibleCells = new ArrayList<>();
+        for ( cell[] row : this.getCells()) {
+            for (cell cell : row) {
+                if (cell.getPiece() != null && cell.getPiece().getType() != Piece.Type.KING && cell.getPiece().getColor() == playerColor) {
+                    possibleCells.addAll(cell.getPiece().getPossibleMoves(new Move(cell,new cell(0,0)),this,true));
+                }
+            }
+        }
+        return possibleCells;
     }
 
     // method to check if there are any pinned pieces for a every player ; this method should be executed after every move

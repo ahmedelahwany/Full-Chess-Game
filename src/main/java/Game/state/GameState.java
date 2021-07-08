@@ -112,6 +112,9 @@ public class GameState {
             changePiecePositionInState(move.getFromCell(),move.getToCell());
             changePiecePositionInState(board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()+3],
                                        board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()+1]);
+        } else if (lastMoveType == Move.moveType.PAWN_EN_PASSANT){
+            changePiecePositionInState(move.getFromCell(),move.getToCell());
+            INITIAL[board.getEnPassant().getRank()][board.getEnPassant().getFile()] = 30;
         }
 
         board.executeMove(move);

@@ -13,6 +13,7 @@ public class Move {
         ToCell = toCell;
     }
 
+    // these type are useful for updating the board after every move ( model and view)
     public enum moveType {
         PAWN_PROMOTION,
         CASTLE_KING_SIDE,

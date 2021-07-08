@@ -17,12 +17,11 @@ public class Queen extends Piece {
     public void validateMove(Move move, Board board) {
         Board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
-        getPossibleMoves(move, board);
 
     }
 
     @Override
-    public ArrayList<cell> getPossibleMoves(Move move, Board board) {
+    public ArrayList<cell> getPossibleMoves(Move move, Board board ,  boolean possible) {
         Color currentPlayerColor;
         int fromCellFile = move.getFromCell().getFile();
         int fromCellRank = move.getFromCell().getRank();
@@ -65,12 +64,12 @@ public class Queen extends Piece {
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
 
@@ -83,12 +82,12 @@ public class Queen extends Piece {
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
 
@@ -103,12 +102,12 @@ public class Queen extends Piece {
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
             iterator = 1;
@@ -119,12 +118,12 @@ public class Queen extends Piece {
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iterator++;
             }
         }
@@ -137,12 +136,12 @@ public class Queen extends Piece {
                 if ( possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iteratorX++;
                 iteratorY++;
             }
@@ -154,12 +153,12 @@ public class Queen extends Piece {
                 this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece() != null) {
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iteratorX++;
                 iteratorY++;
             }
@@ -175,12 +174,12 @@ public class Queen extends Piece {
                 this.RegularMoves.add(possibleCell);
                 if (possibleCell.getPiece() != null) {
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iteratorX++;
                 iteratorY++;
             }
@@ -194,12 +193,12 @@ public class Queen extends Piece {
                 if (possibleCell.getPiece() != null) {
                     this.RegularMoves.add(possibleCell);
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.possibleMoves.add(possibleCell);
+                        this.AddPossibleMove(board,move,possibleCell,possible);
                     }
                     break;
                 }
                 this.RegularMoves.add(possibleCell);
-                this.possibleMoves.add(possibleCell);
+                this.AddPossibleMove(board,move,possibleCell,possible);
                 iteratorX++;
                 iteratorY++;
             }

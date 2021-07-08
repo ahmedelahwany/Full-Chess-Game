@@ -19,7 +19,7 @@ public class King extends Piece {
     @Override
     public void validateMove(Move move, Board board) {
 
-        if(this.getPossibleMoves(move,board).contains(move.getToCell())){
+        if(this.getPossibleMoves(move,board,true).contains(move.getToCell())){
             if( move.getToCell().getFile() - move.getFromCell().getFile() == 2){
                 Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
                 board.setEnPassant(null);
@@ -31,14 +31,13 @@ public class King extends Piece {
                 board.setEnPassant(null);
             }
 
-        } else {
         }
     }
 
 
 
     @Override
-    public ArrayList<cell> getPossibleMoves(Move move, Board board) {
+    public ArrayList<cell> getPossibleMoves(Move move, Board board, boolean possible) {
         Color opponentColor = move.getFromCell().getPiece().getColor() == Color.WHITE ? Color.BLACK:Color.WHITE;
         int KingRank = move.getFromCell().getRank();
         int KingFile = move.getFromCell().getFile();
@@ -99,13 +98,14 @@ public class King extends Piece {
     }
 
     public boolean isCheckedMatedOrStaleMated (cell KingPosition ,Board board){
-        // check if king is checkMated
+        // check if king is checkMated (it needs to be checked , can't move and there is no any piece of same color that can defend it)
+
         if(this.isChecked(KingPosition, board) &&
-           this.getPossibleMoves(new Move(KingPosition,new cell (0,0)),board).size() == 0){
-            Board.lastMoveType = Move.moveType.CHECKMATE;
+           this.getPossibleMoves(new Move(KingPosition,new cell (0,0)),board,true).size() == 0
+           && board.getAllPossibleMove(KingPosition.getPiece().getColor()).size() == 0){
             return true;
         }
-        // check if king is staleMated
+        // check if king is staleMated ( it needs to be not under check and none of its pieces can't move)
         if(!this.isChecked(KingPosition , board) &&
              board.getAttackedCellsByOpponent(this.getColor()).size() == 0){
             Board.lastMoveType = Move.moveType.STALEMATE;
