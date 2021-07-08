@@ -67,7 +67,8 @@ public class Pawn extends Piece {
         if((isWithinTheRange(fromCellRank + 2 * direction,fromCellFile)))
             {
                 cell possibleCell = board.getCells()[fromCellRank + 2 * direction][fromCellFile];
-                if(possibleCell.getPiece() == null && fromCellRank == defaultStartRank)
+                cell oneCellForward = board.getCells()[fromCellRank + 2 * direction][fromCellFile]; // next cell in the forward direction has to be empty
+                if(possibleCell.getPiece() == null && oneCellForward.getPiece() == null && fromCellRank == defaultStartRank)
                     this.AddPossibleMove(board,move,possibleCell,possible);
                     this.twoCellsMoves.add(possibleCell);
             }
