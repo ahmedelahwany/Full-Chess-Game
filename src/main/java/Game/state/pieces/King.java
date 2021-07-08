@@ -104,21 +104,21 @@ public class King extends Piece {
 
 
 
-    public boolean isCheckedMatedOrStaleMated (cell KingPosition ,Board board){
+    public String isCheckedMatedOrStaleMated (cell KingPosition ,Board board){
         // check if king is checkMated (it needs to be checked , can't move and there is no any piece of same color that can defend it)
 
         if(this.isChecked() &&
            this.getPossibleMoves(new Move(KingPosition,new cell (0,0)),board,true).size() == 0
            && board.getAllPossibleMove(KingPosition.getPiece().getColor()).size() == 0){
-            return true;
+            return "checkmate";
         }
         // check if king is staleMated ( it needs to be not under check and none of its pieces can't move)
         if(!this.isChecked() &&
              board.getAttackedCellsByOpponent(this.getColor()).size() == 0){
             Board.lastMoveType = Move.moveType.STALEMATE;
-            return true;
+            return "stalemate";
         }
-            return false;
+            return null;
     }
 
 

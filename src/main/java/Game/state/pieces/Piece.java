@@ -117,7 +117,7 @@ public abstract class Piece {
         boolean oldWhiteKingChecked = whiteKing.isChecked();
         boolean oldBlackKingChecked = blackKing.isChecked();
         boolean pieceDefend = false;
-            board.executeMove(possibleMove);
+            board.executeMove(possibleMove,false);
             King king = (King) KingPosition.getPiece();
             if(!king.isChecked()){
                 pieceDefend = true;

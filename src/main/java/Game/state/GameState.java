@@ -22,7 +22,6 @@ public class GameState {
 
     private  Player SecondPlayer;
 
-    private boolean isGameFinihed ;
 
     private  Player currentPlayer ;
     int Type = 0;
@@ -117,7 +116,7 @@ public class GameState {
             INITIAL[board.getEnPassant().getRank()][board.getEnPassant().getFile()] = 30;
         }
 
-        board.executeMove(move);
+        board.executeMove(move,true);
     }
 
 
@@ -130,13 +129,15 @@ public class GameState {
     }
     /**
      * Checks whether the game is finished.
-     *
-     * @return {@code true} if the game is finished, {@code false} otherwise
      */
-    public boolean isGameFinished(int nextKnightRow , int nextKnightCol){
-        isGameFinihed = true;
-
-        return isGameFinihed;
+    public String isGameFinished(){
+        if(lastMoveType == Move.moveType.CHECKMATE ){
+            return "Check Mate";
+        } else if(lastMoveType == Move.moveType.STALEMATE){
+            return  "Stale Mate";
+        } else {
+            return null;
+        }
     }
 
 

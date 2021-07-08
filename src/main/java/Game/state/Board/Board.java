@@ -32,9 +32,10 @@ public class Board {
         build(cellsCode);
     }
 
-    public void executeMove(Move move) {
+    public void executeMove(Move move , boolean checkKingMating) {
         move.getFromCell().getPiece().validateMove(move,this);
 
+        Piece.Color opponentColor = move.getFromCell().getPiece().getColor() == Piece.Color.WHITE ? Piece.Color.BLACK: Piece.Color.WHITE;
         lastCapturedPiece = move.getToCell().getPiece();
         // All game states are listed here , which are used to be able to update the board correctly
         // if it's a regular move
@@ -64,23 +65,38 @@ public class Board {
 
 
         checkPinnedPieces();
-        checkIfKingsAreunderCheck();
+        checkIfKingsAreunderCheck(checkKingMating);
+
+
+        System.out.println(lastMoveType);
     }
 
-    private void checkIfKingsAreunderCheck(){
 
+    private void checkIfKingsAreunderCheck(boolean checkKingMating){
 
-        for ( cell[] row : cells) {
-            for (cell cell : row) {
+        String CheckMateValue = null;
+        for ( cell[] row : cells){
+            for (cell cell :row) {
                 if (cell.getPiece() != null) {
-
                     if (cell.getPiece().getType() == Piece.Type.KING) {
                         King king = (King) cell.getPiece();
-                        Piece.Color opponentColor = cell.getPiece().getColor() == Piece.Color.WHITE ? Piece.Color.BLACK: Piece.Color.WHITE;
+                        Piece.Color opponentColor = cell.getPiece().getColor() == Piece.Color.WHITE ? Piece.Color.BLACK : Piece.Color.WHITE;
                         king.setChecked(this.getAttackedCellsByOpponent(opponentColor).contains(cell));
+
+                         if(checkKingMating){
+                             if(king.isCheckedMatedOrStaleMated(cell,this) != null ){
+                                 CheckMateValue = king.isCheckedMatedOrStaleMated(cell,this);
+                             }
+                         }
                     }
                 }
             }
+        }
+
+        if ( CheckMateValue != null && CheckMateValue.equals("checkmate")){
+            lastMoveType = Move.moveType.CHECKMATE;
+        } else if(CheckMateValue != null && CheckMateValue.equals("stalemate")){
+            lastMoveType = Move.moveType.STALEMATE;
         }
 
     }
