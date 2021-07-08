@@ -30,7 +30,7 @@ public class Bishop extends Piece {
 
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 
-        this.possibleMoves.clear();
+       if(possible) this.possibleMoves.clear();
         this.RegularMoves.clear();
 
         int rankPinningDirection = 0;

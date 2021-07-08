@@ -23,7 +23,7 @@ public class Knight extends Piece {
     public ArrayList<cell> getPossibleMoves(Move move, Board board , boolean possible) {
 
        Color currentPlayerColor = move.getFromCell().getPiece().getColor();
-        this.possibleMoves.clear();
+        if(possible)this.possibleMoves.clear();
         this.RegularMoves.clear();
      if(this.getPinningPiece() == null){
 

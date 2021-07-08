@@ -16,6 +16,16 @@ public class King extends Piece {
         this.setType(Type.KING);
     }
 
+    boolean isChecked ;
+
+    public boolean isChecked() {
+        return isChecked;
+    }
+
+    public void setChecked(boolean checked) {
+        isChecked = checked;
+    }
+
     @Override
     public void validateMove(Move move, Board board) {
 
@@ -41,7 +51,7 @@ public class King extends Piece {
         Color opponentColor = move.getFromCell().getPiece().getColor() == Color.WHITE ? Color.BLACK:Color.WHITE;
         int KingRank = move.getFromCell().getRank();
         int KingFile = move.getFromCell().getFile();
-        this.possibleMoves.clear();
+        if(possible)this.possibleMoves.clear();
 
         this.RegularMoves.clear();
         int defaultRookRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 7 : 0;
@@ -72,7 +82,7 @@ public class King extends Piece {
             boolean castleValid = false;
             Piece rockPosition = board.getCells()[defaultRookRank][ints[0]].getPiece();
             if (rockPosition != null) {
-                if (this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked(move.getFromCell(), board)) {
+                if (this.isFirstMove() && rockPosition.isFirstMove() && !this.isChecked()) {
                     castleValid = true;
                     for (int j = 1; j <= ints[1]; j++) {
                         cell interveningCell = board.getCells()[defaultRookRank][KingFile + direction * j];  // cell between king and rock has to be empty and not under attack by any opponent piece
@@ -92,21 +102,18 @@ public class King extends Piece {
 
     }
 
-    public boolean isChecked (cell KingPosition,Board board){
-        Color opponentColor = this.getColor() == Color.WHITE ? Color.BLACK:Color.WHITE;
-        return board.getAttackedCellsByOpponent(opponentColor).contains(KingPosition);
-    }
+
 
     public boolean isCheckedMatedOrStaleMated (cell KingPosition ,Board board){
         // check if king is checkMated (it needs to be checked , can't move and there is no any piece of same color that can defend it)
 
-        if(this.isChecked(KingPosition, board) &&
+        if(this.isChecked() &&
            this.getPossibleMoves(new Move(KingPosition,new cell (0,0)),board,true).size() == 0
            && board.getAllPossibleMove(KingPosition.getPiece().getColor()).size() == 0){
             return true;
         }
         // check if king is staleMated ( it needs to be not under check and none of its pieces can't move)
-        if(!this.isChecked(KingPosition , board) &&
+        if(!this.isChecked() &&
              board.getAttackedCellsByOpponent(this.getColor()).size() == 0){
             Board.lastMoveType = Move.moveType.STALEMATE;
             return true;

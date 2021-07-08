@@ -24,7 +24,7 @@ public class Rock extends Piece{
         int fromCellFile = move.getFromCell().getFile();
         int fromCellRank = move.getFromCell().getRank();
         int iterator = 1;
-        this.possibleMoves.clear();
+        if(possible)this.possibleMoves.clear();
         this.RegularMoves.clear();
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 

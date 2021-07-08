@@ -28,7 +28,7 @@ public class Queen extends Piece {
         int iterator = 1;
         int iteratorX = 1;
         int iteratorY = 1;
-        this.possibleMoves.clear();
+        if(possible) this.possibleMoves.clear();
         this.RegularMoves.clear();
         currentPlayerColor = move.getFromCell().getPiece().getColor();
 

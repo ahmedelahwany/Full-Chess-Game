@@ -40,7 +40,7 @@ public class Pawn extends Piece {
         int direction = move.getFromCell().getPiece().getColor() == Color.WHITE ? -1 : 1;
         int defaultStartRank = move.getFromCell().getPiece().getColor() == Color.WHITE ? 6 : 1;
         currentPlayerColor = move.getFromCell().getPiece().getColor();
-        this.possibleMoves.clear();
+        if(possible)this.possibleMoves.clear();
         this.RegularMoves.clear();
         this.twoCellsMoves.clear();
         enpassantCell = null;
@@ -101,7 +101,6 @@ public class Pawn extends Piece {
             this.RegularMoves.add(possibleCell);
             if(possibleCell.getPiece() != null )
             {
-                System.out.println(filePinned);
                 if(( this.getPinningPiece() == null && possibleCell.getPiece().getColor() != currentPlayerColor) ||
                    (filePinned && possibleCell.getPiece().getType()== this.getPinningPiece().getPiece().getType()))// to count for the case when the pawn is pinned by Bishop or a queen on the diagonal direction(left))
                     this.AddPossibleMove(board,move,possibleCell,possible);

@@ -59,24 +59,44 @@ public class Board {
             enPassant = null;
         }
 
-        System.out.println(this);
         // TODO
         // check mate and stale mate ,pawn promotion , check , enpassant cases
 
 
         checkPinnedPieces();
-        
+        checkIfKingsAreunderCheck();
+    }
+
+    private void checkIfKingsAreunderCheck(){
+
+
+        for ( cell[] row : cells) {
+            for (cell cell : row) {
+                if (cell.getPiece() != null) {
+
+                    if (cell.getPiece().getType() == Piece.Type.KING) {
+                        King king = (King) cell.getPiece();
+                        Piece.Color opponentColor = cell.getPiece().getColor() == Piece.Color.WHITE ? Piece.Color.BLACK: Piece.Color.WHITE;
+                        king.setChecked(this.getAttackedCellsByOpponent(opponentColor).contains(cell));
+                    }
+                }
+            }
+        }
+
     }
 
     // this method is used to undo moves after simulating executing moves on a board for checking if any piece can defend its king while checking if it's checkmated or nor
-    public void undoMove(Move move ,boolean oldFirstMove , Move.moveType lastMoveType , cell enPassantCell){
+    public void undoMove(Move move ,boolean oldFirstMove , Move.moveType lastMoveType , cell enPassantCell , boolean BCheck , boolean wCheck){
         Board.lastMoveType = lastMoveType;
         this.setEnPassant(enPassantCell);
         move.getFromCell().getPiece().setFirstMove(oldFirstMove);
         move.getFromCell().getPiece().setPinningPiece(null);
+        King whiteKing = (King) wKingPosition.getPiece();
+        King blackKing = (King) bKingPosition.getPiece();
+        whiteKing.setChecked(wCheck);
+        blackKing.setChecked(BCheck);
         cells[move.getToCell().getRank()][move.getToCell().getFile()].setPiece(lastCapturedPiece);
         cells[move.getFromCell().getRank()][move.getFromCell().getFile()].setPiece(move.getFromCell().getPiece());
-        System.out.println(this);
     }
 
 

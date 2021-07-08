@@ -72,7 +72,6 @@ public abstract class Piece {
             }
         }
         if (cells.size() == 1) {
-            System.out.println("asda");
             cells.get(0).getPiece().setPinningPiece(position);
             // for a piece to be pinned to a king , it has to be the only piece in the way from the attacking piece to the king.
         }
@@ -90,23 +89,20 @@ public abstract class Piece {
         if(OpponentKingFile == position.getFile())
        {
            for (int i = directionRank * position.getRank(); i < OpponentKingRank * directionRank ; i++) {
-             int j = OpponentKingFile;
-            if (board.getCells()[Math.abs(i)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(j)].getPiece().getColor() == opponentColor) {
-                cells.add(board.getCells()[Math.abs(i)][Math.abs(j)]); // pinned pieces as a first element in the array
+               if (board.getCells()[Math.abs(i)][Math.abs(OpponentKingFile)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(OpponentKingFile)].getPiece().getColor() == opponentColor) {
+                cells.add(board.getCells()[Math.abs(i)][Math.abs(OpponentKingFile)]); // pinned pieces as a first element in the array
             }
         }
        }
         if(OpponentKingRank == position.getRank())
         {
             for (int j = directionFile * position.getFile(); j < OpponentKingFile * directionFile ; j++) {
-                int i = OpponentKingRank;
-                if (board.getCells()[Math.abs(i)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(i)][Math.abs(j)].getPiece().getColor() == opponentColor) {
-                    cells.add(board.getCells()[Math.abs(i)][Math.abs(j)]); // pinned pieces as a first element in the array
+                if (board.getCells()[Math.abs(OpponentKingRank)][Math.abs(j)].getPiece() != null && board.getCells()[Math.abs(OpponentKingRank)][Math.abs(j)].getPiece().getColor() == opponentColor) {
+                    cells.add(board.getCells()[Math.abs(OpponentKingRank)][Math.abs(j)]); // pinned pieces as a first element in the array
                 }
             }
         }
         if (cells.size() == 1) {
-            System.out.println("asda");
             cells.get(0).getPiece().setPinningPiece(position);
             // for a piece to be pinned to a king , it has to be the only piece in the way from the attacking piece to the king.
         }
@@ -116,23 +112,25 @@ public abstract class Piece {
         boolean oldFirstMove = possibleMove.getFromCell().getPiece().isFirstMove();
         cell currentEnpasantCell = board.getEnPassant();
         Move.moveType lastMoveType = Board.lastMoveType;
+        King whiteKing = (King)board.getwKingPosition().getPiece();
+        King blackKing = (King)board.getbKingPosition().getPiece();
+        boolean oldWhiteKingChecked = whiteKing.isChecked();
+        boolean oldBlackKingChecked = blackKing.isChecked();
         boolean pieceDefend = false;
             board.executeMove(possibleMove);
             King king = (King) KingPosition.getPiece();
-            if(!king.isChecked(KingPosition , board)){
+            if(!king.isChecked()){
                 pieceDefend = true;
             }
-            board.undoMove(possibleMove,oldFirstMove,lastMoveType,currentEnpasantCell);
+            board.undoMove(possibleMove,oldFirstMove,lastMoveType,currentEnpasantCell, oldBlackKingChecked, oldWhiteKingChecked); // resetting every thing in the board lastMoveType,enpassant
             return pieceDefend;
     }
     // adding possible move is possible only if the king is not under check or if the king is under check while the piece can defend it
     protected void AddPossibleMove (Board board ,Move move , cell possibleCell ,boolean possible) {
         cell ownKing = this.getColor() == Color.WHITE ? board.getwKingPosition() : board.getbKingPosition();
         King king = (King) ownKing.getPiece();
-      if (possible) { if (king.isChecked(ownKing, board)) {
-          System.out.println("sad");
+      if (possible) { if (king.isChecked()) {
             if (this.checkIfPieceDefendKing(board, new Move(move.getFromCell(), possibleCell), ownKing)) {
-                System.out.println("asa");
                 this.possibleMoves.add(possibleCell);
             }
         } else {
