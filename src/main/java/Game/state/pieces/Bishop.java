@@ -29,6 +29,7 @@ public class Bishop extends Piece {
         int iteratorY = 1;
 
         currentPlayerColor = move.getFromCell().getPiece().getColor();
+        cell OpponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() : board.getwKingPosition();
 
        if(possible) this.possibleMoves.clear();
         this.RegularMoves.clear();
@@ -58,7 +59,8 @@ public class Bishop extends Piece {
                         if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                             this.AddPossibleMove(board,move,possibleCell,possible);
                         }
-                        break;
+                                            if(possible || !(possibleCell.equals(OpponentKing)) )break;
+
                     }
                     this.RegularMoves.add(possibleCell);
                     this.AddPossibleMove(board,move,possibleCell,possible);
@@ -75,7 +77,8 @@ public class Bishop extends Piece {
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                         this.AddPossibleMove(board,move,possibleCell,possible);
                     }
-                    break;
+                                        if(possible || !(possibleCell.equals(OpponentKing)) )break;
+
                 }
                 this.RegularMoves.add(possibleCell);
                 this.AddPossibleMove(board,move,possibleCell,possible);
@@ -97,7 +100,8 @@ public class Bishop extends Piece {
                      if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                          this.AddPossibleMove(board,move,possibleCell,possible);
                      }
-                     break;
+                                         if(possible || !(possibleCell.equals(OpponentKing)) )break;
+
                  }
                  this.RegularMoves.add(possibleCell);
                  this.AddPossibleMove(board,move,possibleCell,possible);
@@ -116,7 +120,8 @@ public class Bishop extends Piece {
                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
                         this.AddPossibleMove(board,move,possibleCell,possible);
                     }
-                    break;
+                                        if(possible || !(possibleCell.equals(OpponentKing)) )break;
+
                 }
                 this.RegularMoves.add(possibleCell);
                 this.AddPossibleMove(board,move,possibleCell,possible);
