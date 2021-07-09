@@ -5,8 +5,9 @@ import Game.state.Board.cell;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 
+import static Game.state.Board.Board.DIMENSION;
 import static Game.state.Board.Board.lastMoveType;
 
 /**
@@ -30,7 +31,9 @@ public class GameState {
     /**
      *  an array that sets the position of the cream and brown colors of the squares on the board.
      */
-    public static final int[][] INITIAL = {
+    public  int[][] INITIAL ;
+
+    public static int[][] Basic = {
             {9,7,8,10,11,8,7,9},
             {6,6,6,6,6,6,6,6},
             {30,30,30,30,30,30,30,30},
@@ -41,36 +44,15 @@ public class GameState {
             {3,1,2,4,5,2,1,3}
     };
 
-
     /**
      * The array storing the current configuration of the board.
      */
     private Board board;
 
 
-    /**
-     * Creates a {@code GameState} object representing the (original)
-     * initial state of the game.
-     * @param FirstPlayer the first player by definition
-     * @param SecondPlayer the second player by definition
-     */
-    public GameState(Player FirstPlayer, Player SecondPlayer) {
-        this(INITIAL , FirstPlayer, SecondPlayer);
-    }
-
-    /**
-     * constructor with one argument for testing purposes
-     * Creates a {@code GameState} object representing the (original)
-     * initial state of the game.
-     *   @param a an array of size 8&#xd7;8 representing the initial configuration
-     *       of the board
-     */
-    public GameState(int[][] a ) {
-        this(a , new Player("john") , new Player("Doe"));
-    }
 
     public GameState() {
-        this(INITIAL , new Player("john") , new Player("Doe"));
+        this(Basic , new Player("john") , new Player("Doe"));
     }
 
     /**
@@ -85,6 +67,7 @@ public class GameState {
         this.SecondPlayer = SecondPlayer;
         this.currentPlayer = FirstPlayer;
         initBoard(a);
+        INITIAL = cloneArray(Basic);
     }
 
 
@@ -154,5 +137,10 @@ public class GameState {
     }
 
 
+    public int[][] cloneArray(int [][] a){
+        return Arrays.stream(a)
+                .map(int[]::clone)
+                .toArray(int[][]::new);
+    }
 
 }

@@ -18,7 +18,7 @@ public class MyApplication extends Application {
             new AbstractModule() {
                 @Override
                 protected void configure() {
-                    install(new PersistenceModule("KnightGamesdbs"));
+                    install(new PersistenceModule("ChessGamesdbs"));
                     bind(GameResultDao.class);
 
                 }

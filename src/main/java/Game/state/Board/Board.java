@@ -34,8 +34,6 @@ public class Board {
 
     public void executeMove(Move move , boolean checkKingMating) {
         move.getFromCell().getPiece().validateMove(move,this);
-
-        Piece.Color opponentColor = move.getFromCell().getPiece().getColor() == Piece.Color.WHITE ? Piece.Color.BLACK: Piece.Color.WHITE;
         lastCapturedPiece = move.getToCell().getPiece();
         // All game states are listed here , which are used to be able to update the board correctly
         // if it's a regular move
@@ -139,6 +137,9 @@ public class Board {
                 }
             }
         }
+        lastMoveType = Move.moveType.REGULAR;
+        enPassant = null;
+        lastCapturedPiece = null;
     }
 
     public ArrayList<cell> getAttackedCellsByOpponent(Piece.Color playerColor) {
