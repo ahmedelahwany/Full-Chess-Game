@@ -3,10 +3,6 @@
     -fx-background-color: brown;
 }
 
-.square:hover{
-    -fx-background-color: black;
-}
-
 .square-black{
  -fx-border-style: solid;
     -fx-background-color: #F0D9B5;
@@ -14,7 +10,9 @@
 
 .possibleMove{
  -fx-border-style: solid;
-    -fx-background-color: #87a7b3;
+ -fx-border-width : 6px;
+ -fx-border-radius : 3px;
+    -fx-border-color: green;
 }
 .possibleCapture{
  -fx-border-style: solid;
