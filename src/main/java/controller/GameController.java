@@ -1,8 +1,9 @@
 package controller;
 
-import Game.state.*;
+import Game.results.GameResult;
 import Game.state.Board.Board;
 import Game.state.Board.cell;
+import Game.state.*;
 import Game.state.pieces.Piece;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,12 +14,9 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -27,15 +25,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
-import Game.results.GameResult;
-import Game.results.GameResultDao;
-import Game.results.TopPlayer;
-import Game.results.TopPlayerDao;
 
-import java.io.IOException;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -60,9 +51,12 @@ public class GameController {
 
     public static Piece.Color currentPlayerColor = Piece.Color.WHITE;
 
+
+    Player firstPlayer ;
+    Player secondPlayer;
     private Player winner = new Player("");
 
-
+    private String initialMinutes;
     private Timeline countDownPlayerOne = null;
     private Timeline countDownPlayerTwo = null;
 
@@ -115,8 +109,7 @@ public class GameController {
 
     @FXML Label moveLogging;
 
-    @FXML
-    private Button EndGameButton;
+
 
 
 
@@ -128,10 +121,11 @@ public class GameController {
      * @param SecondPlayer the name of player 2.
      */
     public void initdata(String incrementValue,String minutes , boolean isPlayerOneWhite,String FirstPlayer , String SecondPlayer) {
-        Player firstPlayer = isPlayerOneWhite ? new Player(FirstPlayer) :new Player(SecondPlayer);
-        Player secondPlayer = isPlayerOneWhite ? new Player(SecondPlayer) :new Player(FirstPlayer);
+         firstPlayer = isPlayerOneWhite ? new Player(FirstPlayer) :new Player(SecondPlayer);
+         secondPlayer = isPlayerOneWhite ? new Player(SecondPlayer) :new Player(FirstPlayer);
 
-        this.minutesLeftPlayerOne.set(Integer.parseInt(minutes));;
+        initialMinutes = minutes;
+        this.minutesLeftPlayerOne.set(Integer.parseInt(minutes));
         this.minutesLeftPlayerTwo.set(Integer.parseInt(minutes));
         this.secondsLeftPlayerOne.set(0);
         this.secondsLeftPlayerTwo.set(0);
@@ -174,7 +168,7 @@ public class GameController {
        // topPlayerDao = TopPlayerDao.getInstance();
 
         intiImageList();
-        Platform.runLater(this::start);
+        Platform.runLater(()-> this.start(false));
     }
 
     private void drawBoard() {
@@ -371,13 +365,10 @@ public class GameController {
         }
     }
 
-    public void start() {
+    public void start(boolean restart) {
         stepCountFirstPlayer = 0;
         stepCountSecondPlayer = 0;
-        player1turn.setOpacity(1);
-        player2turn.setOpacity(0);
-       // messageLabel.setText("Player " + this.FirstPlayer.getName()+ " has the first turn");
-       // gameState = new GameState(this.FirstPlayer,this.SecondPlayer);
+        if(restart) initdata(String.valueOf(incrementValue),initialMinutes,true,firstPlayer.getName(),secondPlayer.getName());
         gameState = new GameState();
         currentPlayerColor = Piece.Color.WHITE;
         firstClickPiece = null;
@@ -388,16 +379,7 @@ public class GameController {
         beginGame = ZonedDateTime.now();
         log.info("Game start.");
     }
-    /**
-     * Resets the game to a starting state.
-     * @param actionEvent An action which is sent when a button is pressed.
-     */
-    public void resetGame(ActionEvent actionEvent)  {
-        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
-        log.info("Resetting game...");
 
-        start();
-    }
 
     public void createCountDownTimers(Timeline animation , IntegerProperty minutes , IntegerProperty seconds , Label stopWatchLabel , boolean firstMove , boolean firstPlayerTimer ){
         Timer playerTime = new Timer(0,0) ;
@@ -444,13 +426,18 @@ public class GameController {
         return result;
     }
 
-    public void endGame(ActionEvent actionEvent) throws IOException {
-//
+    /**
+     * Resets the game to a starting state.
+     * @param actionEvent An action which is sent when a button is pressed.
+     */
+    public void resetGame(ActionEvent actionEvent)  {
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Resetting game...");
 
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/highscores.fxml"));
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-        log.info("Finished game, loading Top five scene.");
+        start(true);
+    }
+    public void endGame() {
+     this.gameFinished.setValue(true);
+     messageLabel.setText("Game is Draw by agreement");
     }
 }

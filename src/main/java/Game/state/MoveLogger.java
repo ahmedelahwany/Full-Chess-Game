@@ -83,7 +83,7 @@ public class MoveLogger {
 
         @Override
         public String toString() {
-            return moveNumber + " -  " + whiteMove + "  ||  " + blackMove + "\n";
+            return moveNumber + " -  " + whiteMove + "          " + blackMove + "\n";
         }
     }
     public String getValue() {
