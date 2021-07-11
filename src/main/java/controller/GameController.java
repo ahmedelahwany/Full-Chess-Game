@@ -1,10 +1,14 @@
 package controller;
 
+import Game.state.*;
 import Game.state.Board.Board;
 import Game.state.Board.cell;
-import Game.state.Move;
 import Game.state.pieces.Piece;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -27,10 +31,9 @@ import Game.results.GameResult;
 import Game.results.GameResultDao;
 import Game.results.TopPlayer;
 import Game.results.TopPlayerDao;
-import Game.state.Player;
-import Game.state.GameState;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ public class GameController {
 
     private GameState gameState;
 
+    boolean gameFinished = false;
 
     private ArrayList<Image> imagesList = new ArrayList<>();
     private ArrayList<cell> highlightedCells = new ArrayList<>();
@@ -50,13 +54,29 @@ public class GameController {
     private int stepCountFirstPlayer;
     private int stepCountSecondPlayer;
 
+    private  boolean secondPlayerFirstMove = true;
+
     public static Piece.Color currentPlayerColor = Piece.Color.WHITE;
 
     private Player winner = new Player("");
 
 
+    private Timeline countDownPlayerOne = null;
+    private Timeline countDownPlayerTwo = null;
 
+    private IntegerProperty minutesLeftPlayerOne = new SimpleIntegerProperty();
+    private IntegerProperty secondsLeftPlayerOne = new SimpleIntegerProperty();
+
+    private IntegerProperty minutesLeftPlayerTwo = new SimpleIntegerProperty();
+    private IntegerProperty secondsLeftPlayerTwo = new SimpleIntegerProperty();
+
+    private int incrementValue;
+
+    private MoveLogger moveLogger = new MoveLogger();
     private ZonedDateTime beginGame;
+
+    public GameController() {
+    }
 
     //private GameResultDao gameResultDao;
     //private TopPlayerDao topPlayerDao;
@@ -87,6 +107,13 @@ public class GameController {
     private Circle player2turn;
 
     @FXML
+    private Label StopWatchPlayerOne;
+    @FXML
+    private Label StopWatchPlayerTwo;
+
+    @FXML Label moveLogging;
+
+    @FXML
     private Button EndGameButton;
 
 
@@ -98,16 +125,35 @@ public class GameController {
      * @param FirstPlayer the name of the player 1.
      * @param SecondPlayer the name of player 2.
      */
-    public void initdata(String FirstPlayer , String SecondPlayer) {
-        Player firstPlayer = new Player(FirstPlayer);
-        Player secondPlayer = new Player(SecondPlayer);
+    public void initdata(String incrementValue,String minutes , boolean isPlayerOneWhite,String FirstPlayer , String SecondPlayer) {
+        Player firstPlayer = isPlayerOneWhite ? new Player(FirstPlayer) :new Player(SecondPlayer);
+        Player secondPlayer = isPlayerOneWhite ? new Player(SecondPlayer) :new Player(FirstPlayer);
 
+        this.minutesLeftPlayerOne.set(Integer.parseInt(minutes));;
+        this.minutesLeftPlayerTwo.set(Integer.parseInt(minutes));
+        this.secondsLeftPlayerOne.set(0);
+        this.secondsLeftPlayerTwo.set(0);
 
+        this.incrementValue = Integer.parseInt(incrementValue);
+
+        addListenersToTime(secondsLeftPlayerTwo ,minutesLeftPlayerOne);
+        addListenersToTime(secondsLeftPlayerOne ,minutesLeftPlayerTwo);
         usernameLabel1.setText("" + firstPlayer);
         usernameLabel2.setText("" + secondPlayer);
 
         player1turn.setOpacity(1);
         player2turn.setOpacity(0);
+    }
+
+    private void addListenersToTime(IntegerProperty seconds , IntegerProperty minutes) {
+        seconds.addListener((observable ,oldValue,newValue) ->{
+            if(newValue.doubleValue() + minutes.get()  == 0){
+                gameFinished = true;
+                messageLabel.setText("Time Out ... " + (currentPlayerColor == Piece.Color.WHITE ? "Black" : "White") + " is victorious");
+                countDownPlayerOne.stop();
+                countDownPlayerTwo.stop();
+            }
+        });
     }
 
     /**
@@ -186,10 +232,24 @@ public class GameController {
     private void switchPlayerTurn() {
 
         currentPlayerColor = currentPlayerColor == Piece.Color.WHITE? Piece.Color.BLACK : Piece.Color.WHITE;
-        if (player1turn.getOpacity() == 1) {
-            player1turn.setOpacity(0);
+        if (player1turn.getOpacity() == 1) { //black   switching opacity in UI and stopping the countdown for one player and starting other after incrementing the seconds value.
+            countDownPlayerOne.stop();
+            StopWatchPlayerOne.setText(String.valueOf(new Timer(minutesLeftPlayerOne.get(), secondsLeftPlayerOne.get() + incrementValue)));
+            if(secondPlayerFirstMove)
+           {
+               createCountDownTimers(countDownPlayerTwo,minutesLeftPlayerTwo,secondsLeftPlayerTwo,StopWatchPlayerTwo,false,false);
+               secondPlayerFirstMove = false;
+           } else {
+                secondsLeftPlayerTwo.set(secondsLeftPlayerTwo.get() + incrementValue);
+                createCountDownTimers(countDownPlayerTwo,minutesLeftPlayerTwo,secondsLeftPlayerTwo ,StopWatchPlayerTwo,false,false);
+            }
+          player1turn.setOpacity(0);
             player2turn.setOpacity(1);
-        } else {
+        } else { //white
+            countDownPlayerTwo.stop();
+            StopWatchPlayerTwo.setText(String.valueOf(new Timer(minutesLeftPlayerTwo.get(), secondsLeftPlayerTwo.get() + incrementValue)));
+            secondsLeftPlayerOne.set(secondsLeftPlayerOne.get() + incrementValue);
+            createCountDownTimers(countDownPlayerOne,minutesLeftPlayerOne,secondsLeftPlayerOne,StopWatchPlayerOne,false,true);
             player1turn.setOpacity(1);
             player2turn.setOpacity(0);
         }
@@ -208,7 +268,8 @@ public class GameController {
 
          cell clickedCell = gameState.getBoard().getCells()[row][column];
 
-         if (click == Click.SECOND_CLICK || ( click == Click.FIRST_CLICK && clickedCell.getPiece().getColor() == currentPlayerColor))
+         if(!gameFinished)
+         {if (click == Click.SECOND_CLICK || ( click == Click.FIRST_CLICK && clickedCell.getPiece().getColor() == currentPlayerColor))
          {
              if(click == Click.FIRST_CLICK ){
                  if(gameState.INITIAL[row][column] != 30)
@@ -226,9 +287,12 @@ public class GameController {
                              gameState.executeMove(new Move (firstClickPiece, clickedCell));
                              click = Click.FIRST_CLICK;
                              if(gameState.isGameFinished()!= null){
-                                 messageLabel.setText(gameState.isGameFinished());
+                                 gameFinished = false;
+                                 if (gameState.isGameFinished() .equals("Check Mate")) messageLabel.setText("Checkmate ... " + currentPlayerColor + " is victorious");
+                                 if (gameState.isGameFinished() .equals("Stale Mate")) messageLabel.setText("Stalemate  ");
                              }
-                             System.out.println(gameState.isGameFinished());
+                             moveLogger.addMove(new Move (firstClickPiece, clickedCell),gameState.getBoard());
+                             moveLogging.setText(moveLogger.getValue());
                              switchPlayerTurn();
                          } else {
                              click = Click.FIRST_CLICK;
@@ -240,9 +304,12 @@ public class GameController {
                          gameState.executeMove(new Move (firstClickPiece, clickedCell));
                          click = Click.FIRST_CLICK;
                          if(gameState.isGameFinished()!= null){
-                             messageLabel.setText(gameState.isGameFinished());
+                             gameFinished = false;
+                             if (gameState.isGameFinished() .equals("Check Mate")) messageLabel.setText("Checkmate  " + currentPlayerColor + " is victorious");
+                             if (gameState.isGameFinished() .equals("Stale Mate")) messageLabel.setText("Stalemate  ");
                          }
-                         System.out.println(gameState.isGameFinished());
+                         moveLogger.addMove(new Move (firstClickPiece, clickedCell),gameState.getBoard());
+                         moveLogging.setText(moveLogger.getValue());
                          switchPlayerTurn();
                      } else {
                          click = Click.FIRST_CLICK;
@@ -250,7 +317,7 @@ public class GameController {
                      drawBoard();
                  }
             }
-         }
+         }}
 
     }
 
@@ -266,7 +333,7 @@ public class GameController {
         ArrayList<cell> possibleMoves = move.getFromCell().getPiece().getPossibleMoves(move,gameState.getBoard(),true);
         for (cell possibleMove : possibleMoves) {
             if ( possibleMove.getPiece() == null){
-                Grid.getChildren().get(possibleMove.getFile() + possibleMove.getRank() * Board.DIMENSION).getStyleClass().set(0,"possibleMove");
+                Grid.getChildren().get(possibleMove.getFile() + possibleMove.getRank() * Board.DIMENSION).getStyleClass().add("possibleMove");
             } else{
                 Grid.getChildren().get(possibleMove.getFile() + possibleMove.getRank() * Board.DIMENSION).getStyleClass().set(0,"possibleCapture");
             }
@@ -277,8 +344,8 @@ public class GameController {
     private void unhighlightPossibleMoves() {
 
         for (cell cell : highlightedCells) {
-                String style = getStyleForSquare(cell.getRank(),cell.getFile());
-                Grid.getChildren().get(cell.getFile() + cell.getRank() * Board.DIMENSION).getStyleClass().set(0,style);
+            String style = getStyleForSquare(cell.getRank(),cell.getFile());
+            Grid.getChildren().get(cell.getFile() + cell.getRank() * Board.DIMENSION).getStyleClass().setAll(style);
         }
         highlightedCells.clear();
     }
@@ -308,6 +375,9 @@ public class GameController {
         currentPlayerColor = Piece.Color.WHITE;
         firstClickPiece = null;
         click = Click.FIRST_CLICK;
+        boolean firstPlayerFirstMove = false;
+        createCountDownTimers(countDownPlayerOne,minutesLeftPlayerOne,secondsLeftPlayerOne,StopWatchPlayerOne,false,true);
+        createCountDownTimers(countDownPlayerTwo,minutesLeftPlayerTwo,secondsLeftPlayerTwo,StopWatchPlayerTwo,secondPlayerFirstMove,false);
         drawBoard();
         beginGame = ZonedDateTime.now();
         log.info("Game start.");
@@ -321,6 +391,37 @@ public class GameController {
         log.info("Resetting game...");
 
         start();
+    }
+
+    public void createCountDownTimers(Timeline animation , IntegerProperty minutes , IntegerProperty seconds , Label stopWatchLabel , boolean firstMove , boolean firstPlayerTimer ){
+        Timer playerTime = new Timer(0,0) ;
+        if (animation!=null) animation.stop();
+        if(firstMove){
+            CountDown(playerTime,minutes,seconds,stopWatchLabel);
+        }
+        else {
+            CountDown(playerTime,minutes,seconds,stopWatchLabel);
+            animation = new Timeline(new KeyFrame(javafx.util.Duration.seconds(1), e -> CountDown(playerTime,minutes,seconds,stopWatchLabel)));
+            animation.setCycleCount(Timeline.INDEFINITE);
+            animation.play();
+            if(firstPlayerTimer){
+                countDownPlayerOne =animation;
+            } else{
+                countDownPlayerTwo = animation;
+            }
+        }
+    }
+
+    private void CountDown(Timer defaultTime, IntegerProperty minutes, IntegerProperty seconds, Label timer) {
+        if (seconds.get() == 0) {
+            minutes.set(minutes.get()-1);
+            seconds.set(59);
+        } else {
+            seconds.set(seconds.get()-1);
+        }
+        defaultTime.setMinutes(minutes.get());
+        defaultTime.setSeconds(seconds.get());
+        timer.setText(defaultTime.toString());
     }
 
     private GameResult getResult() {
