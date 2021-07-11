@@ -14,7 +14,7 @@ public class Board {
 
     public static Move.moveType lastMoveType;
 
-    private Piece lastCapturedPiece;
+    public Piece lastCapturedPiece;
 
     private cell enPassant;
 
@@ -70,9 +70,10 @@ public class Board {
     }
 
 
-    private void checkIfKingsAreunderCheck(boolean checkKingMating){
+    public boolean checkIfKingsAreunderCheck(boolean checkKingMating){
 
         String CheckMateValue = null;
+        boolean kingCheck = false;
         for ( cell[] row : cells){
             for (cell cell :row) {
                 if (cell.getPiece() != null) {
@@ -80,7 +81,7 @@ public class Board {
                         King king = (King) cell.getPiece();
                         Piece.Color opponentColor = cell.getPiece().getColor() == Piece.Color.WHITE ? Piece.Color.BLACK : Piece.Color.WHITE;
                         king.setChecked(this.getAttackedCellsByOpponent(opponentColor).contains(cell));
-
+                        if(this.getAttackedCellsByOpponent(opponentColor).contains(cell)) kingCheck = true;
                          if(checkKingMating){
                              if(king.isCheckedMatedOrStaleMated(cell,this) != null ){
                                  CheckMateValue = king.isCheckedMatedOrStaleMated(cell,this);
@@ -97,6 +98,7 @@ public class Board {
             lastMoveType = Move.moveType.STALEMATE;
         }
 
+        return kingCheck;
     }
 
     // this method is used to undo moves after simulating executing moves on a board for checking if any piece can defend its king while checking if it's checkmated or nor

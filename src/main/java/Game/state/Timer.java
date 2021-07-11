@@ -5,18 +5,12 @@ public class Timer {
     private String minutes;
     private String seconds;
 
-    public Timer( ) {
-        this.minutes = "";
-        this.seconds = "seconds";
+    public Timer(int min , int sec ) {
+        this.setMinutes(min);
+        this.setSeconds(sec);
     }
 
-    public String getMinutes() {
-        return this.minutes;
-    }
 
-    public String getSeconds() {
-        return this.seconds;
-    }
 
     public void setMinutes(int min) {
         if (min < 10) {
@@ -29,8 +23,12 @@ public class Timer {
     public void setSeconds(int sec) {
         if (sec < 10) {
             this.seconds = "0" + sec;
+        } else if(sec > 59){
+          setMinutes(Integer.parseInt( this.minutes)+1);
+          int newSec = 60 - sec;
+          setSeconds(Math.abs(newSec));
         } else {
-            this.seconds = sec + "";
+            this.seconds = sec+"";
         }
     }
 

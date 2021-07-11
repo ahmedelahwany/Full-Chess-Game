@@ -70,30 +70,28 @@ public class cell {
         if(piece != null)
        { switch (piece.getColor()) {
             case WHITE:
-                pieceName += "white_";
+           case BLACK:
+               pieceName += "";
                 break;
-            case BLACK:
-                pieceName += "black_";
-                break;
-        }
+       }
         switch (piece.getType()) {
             case KING:
-                pieceName += "king";
+                pieceName += "K";
                 break;
             case ROOK:
-                pieceName += "rook";
+                pieceName += "R";
                 break;
             case BISHOP:
-                pieceName += "bishop";
+                pieceName += "B";
                 break;
             case QUEEN:
-                pieceName += "queen";
+                pieceName += "Q";
                 break;
             case KNIGHT:
-                pieceName += "knight";
+                pieceName += "N";
                 break;
             case PAWN:
-                pieceName += "pawn";
+                pieceName += "P";
                 break;
 
         }
@@ -101,7 +99,7 @@ public class cell {
              pieceName = "Empty";
         }
 
-        return pieceName + getRank() + getFile();
+        return pieceName;
 
     }
 
