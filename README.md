@@ -1,5 +1,5 @@
 
-# Chessy App
+# Chess App
 > 2 player Full Chess Game with GUI (JavaFx) based on MVC pattern implemented from scratch.
 
 
@@ -7,7 +7,7 @@
 
 - [Features](#Features)
 - [Demo](#Demo)
-- [Technologies used](#Technologies used)
+- [Technologies](#Technologies)
 - [Install](#Install)
 - [Run](#Run)
 
@@ -30,13 +30,13 @@ This is a complete Chess game written in Java with GUI ; It has been tested by p
 # Demo
 **- This is a Demo of two players playing a timed game**
 
-![Chess Game Demo](Demo Images/GameChessDemoGIF.gif)
+![Chess Game Demo](./Demo Images/GameChessDemoGIF.gif)
 
 **- Picture showing checkmate state.**
 
-![Chess Game Pic](Demo Images/DemoTwo.PNG)
+![Chess Game Pic](./Demo Images/DemoTwo.PNG)
 
-# Technologies used
+# Technologies
 - Maven
 - JavaFX
 - JUnit5
