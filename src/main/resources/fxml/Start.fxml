@@ -14,7 +14,7 @@
 
 <Pane prefHeight="712.0" prefWidth="927.0" style="-fx-background-color: #6d676e;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GameController">
    <children>
-      <Label fx:id="usernameLabel1" alignment="CENTER" layoutX="688.0" layoutY="596.0" prefHeight="33.0" prefWidth="147.0" text="Player 1" textFill="#faa916">
+      <Label fx:id="usernameLabel1" alignment="CENTER" layoutX="677.0" layoutY="596.0" prefHeight="33.0" prefWidth="170.0" text="Player 1" textFill="#faa916">
          <font>
             <Font name="Algerian" size="26.0" />
          </font>
@@ -28,7 +28,7 @@
            </font>
        </Label>
 
-      <Label fx:id="usernameLabel2" alignment="CENTER" layoutX="688.0" layoutY="24.0" prefHeight="42.0" prefWidth="147.0" text="Player 2" textFill="#faa916">
+      <Label fx:id="usernameLabel2" alignment="CENTER" layoutX="672.0" layoutY="24.0" prefHeight="42.0" prefWidth="181.0" text="Player 2" textFill="#faa916">
          <font>
             <Font name="Algerian" size="26.0" />
          </font>
@@ -61,18 +61,24 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
          <cursor>
-            <Cursor fx:constant="HAND" />
+            <Cursor fx:constant="OPEN_HAND" />
          </cursor>
       </GridPane>
-       <Button fx:id="resetButton" layoutX="205.0" layoutY="656.0" mnemonicParsing="false" onAction="#resetGame" style="-fx-background-color: #006992;" text="RESET" textFill="WHITE">
+       <Button fx:id="resetButton" layoutX="123.0" layoutY="656.0" mnemonicParsing="false" onAction="#resetGame" style="-fx-background-color: #006992;" text="RESET" textFill="WHITE">
            <font>
                <Font size="19.0" />
            </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
        </Button>
-       <Button fx:id="EndGameButton" layoutX="352.0" layoutY="656.0" mnemonicParsing="false" onAction="#endGame" style="-fx-background-color: #006992;" text="Claim Draw" textFill="WHITE">
+       <Button fx:id="EndGameButton" layoutX="266.0" layoutY="656.0" mnemonicParsing="false" onAction="#endGame" style="-fx-background-color: #006992;" text="Claim Draw" textFill="WHITE">
            <font>
                <Font size="19.0" />
            </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
        </Button>
       <Label fx:id="StopWatchPlayerOne" alignment="CENTER" contentDisplay="CENTER" layoutX="644.0" layoutY="455.0" opacity="0.91" prefHeight="132.0" prefWidth="235.0" style="-fx-background-color: #006992;" textAlignment="CENTER" textFill="#eaf8bf">
          <font>
@@ -179,5 +185,21 @@
             <Font size="20.0" />
          </font>
       </Label>
+      <Button fx:id="WhiteResigns" layoutX="457.0" layoutY="656.0" mnemonicParsing="false" onAction="#WhiteResigns" style="-fx-background-color: #006992;" text="White Resigns" textFill="WHITE">
+         <font>
+            <Font size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
+      <Button fx:id="BlackResigns" layoutX="680.0" layoutY="656.0" mnemonicParsing="false" onAction="#BlackResigns" style="-fx-background-color: #006992;" text="Black Resigns" textFill="WHITE">
+         <font>
+            <Font size="19.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </Button>
    </children>
 </Pane>

@@ -1,9 +1,9 @@
 package controller;
 
-import Game.results.GameResult;
 import Game.state.Board.Board;
 import Game.state.Board.cell;
 import Game.state.*;
+import Game.state.pieces.King;
 import Game.state.pieces.Piece;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,6 +13,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
+
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
@@ -26,9 +27,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Circle;
 import lombok.extern.slf4j.Slf4j;
-
-import java.time.Duration;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
 @Slf4j
@@ -44,8 +42,6 @@ public class GameController {
     private ArrayList<Image> imagesList = new ArrayList<>();
     private ArrayList<cell> highlightedCells = new ArrayList<>();
 
-    private int stepCountFirstPlayer;
-    private int stepCountSecondPlayer;
 
     private  boolean secondPlayerFirstMove = true;
 
@@ -54,7 +50,6 @@ public class GameController {
 
     Player firstPlayer ;
     Player secondPlayer;
-    private Player winner = new Player("");
 
     private String initialMinutes;
     private Timeline countDownPlayerOne = null;
@@ -68,8 +63,7 @@ public class GameController {
 
     private int incrementValue;
 
-    private MoveLogger moveLogger = new MoveLogger();
-    private ZonedDateTime beginGame;
+    private MoveLogger moveLogger;
 
     public GameController() {
     }
@@ -107,8 +101,16 @@ public class GameController {
     @FXML
     private Label StopWatchPlayerTwo;
 
-    @FXML Label moveLogging;
+    @FXML
+    private  Label moveLogging;
 
+    @FXML
+    private Button WhiteResigns;
+    @FXML
+    private Button BlackResigns;
+
+    @FXML
+    private Button EndGameButton;
 
 
 
@@ -133,7 +135,7 @@ public class GameController {
         this.incrementValue = Integer.parseInt(incrementValue);
 
         addListeners(secondsLeftPlayerTwo ,minutesLeftPlayerOne);
-        addListeners(secondsLeftPlayerOne ,minutesLeftPlayerTwo);
+        addListeners(secondsLeftPlayerTwo ,minutesLeftPlayerTwo);
         usernameLabel1.setText("" + firstPlayer);
         usernameLabel2.setText("" + secondPlayer);
 
@@ -182,6 +184,7 @@ public class GameController {
             }
         }
         placePiece();
+        highKingifChecked(gameState.getBoard());
     }
 
     private void intiImageList (){
@@ -228,6 +231,7 @@ public class GameController {
         var square = new StackPane();
         square.getStyleClass().add(cls);
         square.setOnMouseClicked(this::handleMouseClick);
+
         return square;
     }
     private void switchPlayerTurn() {
@@ -267,10 +271,11 @@ public class GameController {
         int column = GridPane.getColumnIndex((Node) mouseEvent.getSource());
         int row = GridPane.getRowIndex((Node) mouseEvent.getSource());
 
+
          cell clickedCell = gameState.getBoard().getCells()[row][column];
 
          if(!gameFinished.get())
-         {if (click == Click.SECOND_CLICK || ( click == Click.FIRST_CLICK && clickedCell.getPiece().getColor() == currentPlayerColor))
+         {if (click == Click.SECOND_CLICK || ( click == Click.FIRST_CLICK && clickedCell.getPiece()!= null && clickedCell.getPiece().getColor() == currentPlayerColor))
          {
              if(click == Click.FIRST_CLICK ){
                  if(gameState.INITIAL[row][column] != 30)
@@ -306,6 +311,25 @@ public class GameController {
             }
          }}
 
+    }
+
+    private void highKingifChecked(Board board) {
+        cell whiteKing = board.getwKingPosition();
+        cell blackKing = board.getbKingPosition();
+
+        King wKing = (King)whiteKing.getPiece();
+        King bKing = (King)blackKing.getPiece();
+
+        if(wKing.isChecked()){
+            Grid.getChildren().get(whiteKing.getFile() + whiteKing.getRank() * Board.DIMENSION).getStyleClass().set(0,"possibleCapture");
+        } else if(bKing.isChecked()){
+            Grid.getChildren().get(blackKing.getFile() + blackKing.getRank() * Board.DIMENSION).getStyleClass().set(0,"possibleCapture");
+        } else{
+            String wstyle = getStyleForSquare(whiteKing.getRank(),whiteKing.getFile());
+            String bstyle = getStyleForSquare(blackKing.getRank(),blackKing.getFile());
+            Grid.getChildren().get(whiteKing.getFile() + whiteKing.getRank() * Board.DIMENSION).getStyleClass().setAll(wstyle);
+            Grid.getChildren().get(blackKing.getFile() + blackKing.getRank() * Board.DIMENSION).getStyleClass().setAll(bstyle);
+        }
     }
 
     private void finishGameOrSwitch(cell clickedCell){
@@ -366,17 +390,16 @@ public class GameController {
     }
 
     public void start(boolean restart) {
-        stepCountFirstPlayer = 0;
-        stepCountSecondPlayer = 0;
         if(restart) initdata(String.valueOf(incrementValue),initialMinutes,true,firstPlayer.getName(),secondPlayer.getName());
         gameState = new GameState();
         currentPlayerColor = Piece.Color.WHITE;
         firstClickPiece = null;
         click = Click.FIRST_CLICK;
+        secondPlayerFirstMove = true;
+        moveLogger = new MoveLogger();
         createCountDownTimers(countDownPlayerOne,minutesLeftPlayerOne,secondsLeftPlayerOne,StopWatchPlayerOne,false,true);
         createCountDownTimers(countDownPlayerTwo,minutesLeftPlayerTwo,secondsLeftPlayerTwo,StopWatchPlayerTwo,secondPlayerFirstMove,false);
         drawBoard();
-        beginGame = ZonedDateTime.now();
         log.info("Game start.");
     }
 
@@ -412,19 +435,19 @@ public class GameController {
         timer.setText(defaultTime.toString());
     }
 
-    private GameResult getResult() {
-
-        GameResult result;
-        result = GameResult.builder()
-                                    .FirstPlayer(gameState.getFirstPlayer().getName())
-                                    .SecondPlayer(gameState.getSecondPlayer().getName())
-                                    .winner(winner.getName())
-                                    .stepsFirstPlayer(stepCountFirstPlayer)
-                                    .stepsSecondPlayer(stepCountSecondPlayer)
-                                    .duration(Duration.between(beginGame, ZonedDateTime.now()))
-                                    .build();
-        return result;
-    }
+//    private GameResult getResult() {
+//
+//        GameResult result;
+//        result = GameResult.builder()
+//                                    .FirstPlayer(gameState.getFirstPlayer().getName())
+//                                    .SecondPlayer(gameState.getSecondPlayer().getName())
+//                                    .winner(winner.getName())
+//                                    .stepsFirstPlayer(stepCountFirstPlayer)
+//                                    .stepsSecondPlayer(stepCountSecondPlayer)
+//                                    .duration(Duration.between(beginGame, ZonedDateTime.now()))
+//                                    .build();
+//        return result;
+//    }
 
     /**
      * Resets the game to a starting state.
@@ -433,11 +456,34 @@ public class GameController {
     public void resetGame(ActionEvent actionEvent)  {
         log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
         log.info("Resetting game...");
-
+        disableBtns(false);
+        messageLabel.setText("");
+        moveLogging.setText("");
         start(true);
     }
+
+
     public void endGame() {
      this.gameFinished.setValue(true);
      messageLabel.setText("Game is Draw by agreement");
+     disableBtns(true);
     }
+    public void WhiteResigns() {
+        this.gameFinished.setValue(true);
+        messageLabel.setText("White Resigned ... Black is victorious");
+        moveLogging.setText("");
+        disableBtns(true);
+    }
+    public void BlackResigns() {
+        this.gameFinished.setValue(true);
+        messageLabel.setText("Black Resigned ... White is victorious");
+        moveLogging.setText("");
+        disableBtns(true);
+    }
+    private void disableBtns(boolean disable){
+        WhiteResigns.setDisable(disable);
+        BlackResigns.setDisable(disable);
+        EndGameButton.setDisable(disable);
+    }
+
 }
