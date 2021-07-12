@@ -64,3 +64,7 @@ run the following commands in the project directory
 mvn package
 java -jar ./target/Full-Chess-Game-1.0.jar
 ```
+
+## License
+
+- Copyright 2021 © <a href="https://github.com/ahmedelahwany" target="_blank">Ahmed Elahwany</a>.
