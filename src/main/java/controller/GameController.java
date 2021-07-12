@@ -395,6 +395,7 @@ public class GameController {
         currentPlayerColor = Piece.Color.WHITE;
         firstClickPiece = null;
         click = Click.FIRST_CLICK;
+        gameFinished.setValue(false);
         secondPlayerFirstMove = true;
         moveLogger = new MoveLogger();
         createCountDownTimers(countDownPlayerOne,minutesLeftPlayerOne,secondsLeftPlayerOne,StopWatchPlayerOne,false,true);
