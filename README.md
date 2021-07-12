@@ -30,11 +30,11 @@ This is a complete Chess game written in Java with GUI ; It has been tested by p
 # Demo
 **- This is a Demo of two players playing a timed game**
 
-![Chess Game Demo](./Demo Images/GameChessDemoGIF.gif)
+![Chess Game Demo](GameChessDemoGIF.gif)
 
 **- Picture showing checkmate state.**
 
-![Chess Game Pic](./Demo Images/DemoTwo.PNG)
+![Chess Game Pic](DemoTwo.PNG)
 
 # Technologies
 - Maven
