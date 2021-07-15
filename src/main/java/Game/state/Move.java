@@ -16,12 +16,8 @@ public class Move implements Cloneable{
         ToCell = toCell;
     }
 
-    public boolean isCastlingMove(Board board) {
-        board.executeMove(this,true);
-        return board.lastMoveType == moveType.CASTLE_KING_SIDE || board.lastMoveType == moveType.CASTLE_QUEEN_SIDE;
-    }
 
-    public int getMoveEffect(Board board) {
+    public int getMoveEffect() {
         if(this.getToCell().getPiece() != null ){
             return getToCell().getPiece().getValue() - this.getFromCell().getPiece().getValue() - 1000000;
         }
@@ -43,10 +39,17 @@ public class Move implements Cloneable{
     }
 
     public boolean isThreateningKing(Board board) {
-      board.executeMove(this,true);
-      return board.checkIfKingsAreunderCheck(true);
+        Board newBoard = board.customClone(false);
+        newBoard.executeMove(this,true);
+      return newBoard.checkIfKingsAreunderCheck(true);
      }
 
+
+    public boolean isCastlingMove(Board board) {
+        Board newBoard = board.customClone(false);
+        newBoard.executeMove(this,true);
+        return board.lastMoveType == moveType.CASTLE_KING_SIDE || board.lastMoveType == moveType.CASTLE_QUEEN_SIDE;
+    }
     public boolean isAttackingMove() {
         return this.getToCell().getPiece()!= null;
     }
@@ -71,7 +74,7 @@ public class Move implements Cloneable{
     }
 
     @Override
-    public Object clone() throws CloneNotSupportedException {
+    public Object clone() {
         Move clone;
         try
         {

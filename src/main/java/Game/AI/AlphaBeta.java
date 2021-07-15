@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Observable;
 
-public class AlphaBeta extends Observable  implements MoveStrategy {
+public class AlphaBeta  implements MoveStrategy {
     private final Evaluator evaluator;
     private int quiescenceCount;
     private static final int MAX_QUIESCENCE = 5000 * 5;
@@ -31,16 +31,17 @@ public class AlphaBeta extends Observable  implements MoveStrategy {
 
 
     @Override
-    public Move getMove(Board board ,  int depth) {
+    public Move getMove(Board board ,  int depth) throws CloneNotSupportedException {
         Move bestMove = null;
 
         int HSV = Integer.MIN_VALUE;
         int LSV = Integer.MAX_VALUE;
         int CV;
+        Board newBoard;
         for (final Move move : MoveSorter.Custom.sort(board.getAllPossibleMove(board.currentPlayerColor,false))) {
-            board.executeMove(move,true);
-            board.executeMove(move,true);
-            CV = board.currentPlayerColor == Piece.Color.WHITE ? min(board, depth - 1,HSV,LSV) :max(board, depth - 1,HSV,LSV);
+             newBoard = board.customClone(true);
+            newBoard.executeMove(move,true);
+            CV = board.currentPlayerColor == Piece.Color.WHITE ? min(newBoard, depth - 1,HSV,LSV) :max(newBoard, depth - 1,HSV,LSV);
             if(board.currentPlayerColor == Piece.Color.WHITE && CV >= HSV){
                 HSV = CV;
                 bestMove = move;
@@ -57,14 +58,16 @@ public class AlphaBeta extends Observable  implements MoveStrategy {
     private int max(final Board board,
                     final int depth,
                     final int highest,
-                    final int lowest) {
+                    final int lowest) throws CloneNotSupportedException {
         if (depth == 0 || isGameFinished(board)) {
             return this.evaluator.evaluate(board, depth);
         }
         int currentHighest = highest;
+        Board newBoard;
         for (final Move move : MoveSorter.Basic.sort(board.getAllPossibleMove(board.currentPlayerColor,false))) {
-            board.executeMove(move,true);
-              currentHighest = Math.max(currentHighest, min(board,QuiescenceSearch(board, depth), currentHighest, lowest));
+             newBoard = board.customClone(true);
+            newBoard.executeMove(move,true);
+              currentHighest = Math.max(currentHighest, min(newBoard,QuiescenceSearch(newBoard, depth), currentHighest, lowest));
                 if (currentHighest >= lowest) {
                     return lowest;
                 }
@@ -76,14 +79,16 @@ public class AlphaBeta extends Observable  implements MoveStrategy {
     private int min(final Board board,
                     final int depth,
                     final int highest,
-                    final int lowest) {
+                    final int lowest) throws CloneNotSupportedException {
         if (depth == 0 || isGameFinished(board)) {
             return this.evaluator.evaluate(board, depth);
         }
         int currentLowest = lowest;
+        Board newBoard;
         for (final Move move : MoveSorter.Basic.sort(board.getAllPossibleMove(board.currentPlayerColor,false))) {
-             board.executeMove(move,true);
-                currentLowest = Math.min(currentLowest, max(board, QuiescenceSearch(board, depth), highest, currentLowest));
+            newBoard = board.customClone(true);
+            newBoard.executeMove(move,true);
+                currentLowest = Math.min(currentLowest, max(newBoard, QuiescenceSearch(newBoard, depth), highest, currentLowest));
                 if (currentLowest <= highest) {
                     return highest;
                 }
@@ -121,9 +126,9 @@ public class AlphaBeta extends Observable  implements MoveStrategy {
             @Override
             Collection<Move> sort(final Collection<Move> moves) {
                 return Ordering.from((Comparator<Move>) (move1, move2) -> ComparisonChain.start()
-                        .compareTrueFirst(move1.isCastlingMove(Board.currentBoard), move2.isCastlingMove(Board.currentBoard))
-                        .compare(move2.getMoveEffect(Board.currentBoard), move1.getMoveEffect(Board.currentBoard))
-                        .result()).immutableSortedCopy(moves);
+                       .compareTrueFirst(move1.isCastlingMove(Board.currentBoard), move2.isCastlingMove(Board.currentBoard))
+                       .compare(move2.getMoveEffect(), move1.getMoveEffect())
+                       .result()).immutableSortedCopy(moves);
             }
         },
         Custom {
@@ -132,7 +137,7 @@ public class AlphaBeta extends Observable  implements MoveStrategy {
                 return Ordering.from((Comparator<Move>) (move1, move2) -> ComparisonChain.start()
                         .compareTrueFirst(move1.isThreateningKing(Board.currentBoard), move2.isThreateningKing(Board.currentBoard))
                         .compareTrueFirst(move1.isCastlingMove(Board.currentBoard), move2.isCastlingMove(Board.currentBoard))
-                        .compare(move2.getMoveEffect(Board.currentBoard), move1.getMoveEffect(Board.currentBoard))
+                        .compare(move2.getMoveEffect(), move1.getMoveEffect())
                         .result()).immutableSortedCopy(moves);
             }
         };

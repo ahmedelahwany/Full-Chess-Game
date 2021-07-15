@@ -37,6 +37,7 @@ public class Board {
     public Board(int[][] cellsCode) {
 
         build(cellsCode);
+        Board.currentBoard = this;
     }
     public Board(){
 
@@ -284,7 +285,7 @@ public class Board {
 
 
     // deep cloning of board
-    public Board customClone () throws CloneNotSupportedException {
+    public Board customClone (boolean updateCurrent) {
         Board board = new Board();
         for (int i = 0; i < DIMENSION; i++) {
             for (int j = 0; j < DIMENSION; j++) {
@@ -301,7 +302,7 @@ public class Board {
         for (Move move : this.moveHistory){
             board.moveHistory.add((Move) move.clone());
         }
-        Board.currentBoard = board;
+       if(updateCurrent) Board.currentBoard = board;
         return board;
     }
 
