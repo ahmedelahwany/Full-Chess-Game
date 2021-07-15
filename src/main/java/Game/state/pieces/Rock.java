@@ -85,6 +85,13 @@ public class Rock extends Piece{
     }
 
     @Override
+    public Piece clone() {
+        Rock Rock = new Rock(this.getColor());
+        Rock.setFirstMove(this.isFirstMove());
+        Rock.setPinningPiece(this.getPinningPiece().clonei());
+        return Rock;
+    }
+    @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 3 : 9;
     }

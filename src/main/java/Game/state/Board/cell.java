@@ -59,6 +59,10 @@ public class cell {
         return file;
     }
 
+    public cell clonei (){
+        Piece clonedPiece = this.getPiece() == null ? null : this.getPiece().clone();
+        return  new cell(this.getRank(),this.getFile(),clonedPiece);
+    }
     public int getRank() {
         return rank;
     }

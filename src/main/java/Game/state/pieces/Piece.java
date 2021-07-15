@@ -153,6 +153,7 @@ public abstract class Piece {
     }
     public abstract ArrayList<cell> getPossibleMoves(Move move , Board board , boolean possible);
 
+    public abstract Piece clone();
     public abstract int getCode();
     public abstract int getValue();
 

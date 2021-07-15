@@ -45,6 +45,13 @@ public class Knight extends Piece {
     }
 
     @Override
+    public Piece clone() {
+        Knight Knight = new Knight(this.getColor());
+        Knight.setFirstMove(this.isFirstMove());
+        Knight.setPinningPiece(this.getPinningPiece().clonei());
+        return Knight;
+    }
+    @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 1 : 7;
     }

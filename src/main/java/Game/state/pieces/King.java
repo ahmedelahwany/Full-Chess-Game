@@ -146,6 +146,16 @@ public class King extends Piece {
     }
 
     @Override
+    public Piece clone() {
+        King King = new King(this.getColor());
+        King.setFirstMove(this.isFirstMove());
+        King.setPinningPiece(this.getPinningPiece().clonei());
+        King.setChecked(this.isChecked);
+        King.isCastled = this.isCastled;
+        return King;
+    }
+
+    @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 5 : 11;
     }

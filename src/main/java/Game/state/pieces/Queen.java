@@ -122,6 +122,13 @@ public class Queen extends Piece {
         return this.possibleMoves;
     }
 
+    @Override
+    public Piece clone() {
+        Queen Queen = new Queen(this.getColor());
+        Queen.setFirstMove(this.isFirstMove());
+        Queen.setPinningPiece(this.getPinningPiece().clonei());
+        return Queen;
+    }
 
 
     @Override

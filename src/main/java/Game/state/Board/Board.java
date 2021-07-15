@@ -38,6 +38,9 @@ public class Board {
 
         build(cellsCode);
     }
+    public Board(){
+
+    }
 
     public void executeMove(Move move , boolean checkKingMating) {
         move.getFromCell().getPiece().validateMove(move,this);
@@ -254,11 +257,11 @@ public class Board {
     }
 
 
-    public static void setwKingPosition(cell wKingPosition) {
+    public  void setwKingPosition(cell wKingPosition) {
         Board.wKingPosition = wKingPosition;
     }
 
-    public static void setbKingPosition(cell bKingPosition) {
+    public  void setbKingPosition(cell bKingPosition) {
         Board.bKingPosition = bKingPosition;
     }
 
@@ -280,6 +283,27 @@ public class Board {
     }
 
 
+    // deep cloning of board
+    public Board customClone () throws CloneNotSupportedException {
+        Board board = new Board();
+        for (int i = 0; i < DIMENSION; i++) {
+            for (int j = 0; j < DIMENSION; j++) {
+                board.getCells()[i][j] = this.getCells()[i][j].clonei();
+            }
+        }
+        board.setEnPassant(this.enPassant.clonei());
+        board.lastCapturedPiece = this.lastCapturedPiece.clone();
+        board.lastMoveType = this.lastMoveType;
+        board.setwKingPosition(this.getwKingPosition().clonei());
+        board.setbKingPosition(this.getbKingPosition().clonei());
+        board.currentPlayerColor = this.currentPlayerColor;
+        // deep copy of board
+        for (Move move : this.moveHistory){
+            board.moveHistory.add((Move) move.clone());
+        }
+        Board.currentBoard = board;
+        return board;
+    }
 
     @Override
     public String toString() {

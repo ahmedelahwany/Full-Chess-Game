@@ -83,6 +83,14 @@ public class Bishop extends Piece {
         return this.possibleMoves;
     }
 
+    @Override
+    public Piece clone() {
+        Bishop bishop = new Bishop(this.getColor());
+        bishop.setFirstMove(this.isFirstMove());
+        bishop.setPinningPiece(this.getPinningPiece().clonei());
+        return bishop;
+    }
+
     public void checkPinnedPieces(cell position,Board board) {
 
         cell opponentKing = this.getColor() == Color.WHITE ? board.getbKingPosition() :board.getwKingPosition();
@@ -98,6 +106,7 @@ public class Bishop extends Piece {
     public int getCode() {
         return this.getColor() == Color.WHITE ? 2 : 8;
     }
+
 
     @Override
     public int getValue() {

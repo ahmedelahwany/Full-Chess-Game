@@ -121,6 +121,31 @@ public class Pawn extends Piece {
 
     }
 
+    public ArrayList<cell> getTwoCellsMoves() {
+        return twoCellsMoves;
+    }
+
+    public void setTwoCellsMoves(ArrayList<cell> twoCellsMoves) {
+        this.twoCellsMoves = twoCellsMoves;
+    }
+
+    public cell getEnpassantCell() {
+        return enpassantCell;
+    }
+
+    public void setEnpassantCell(cell enpassantCell) {
+        this.enpassantCell = enpassantCell;
+    }
+
+    @Override
+    public Piece clone() {
+        Pawn Pawn = new Pawn(this.getColor());
+        Pawn.setFirstMove(this.isFirstMove());
+        Pawn.setPinningPiece(this.getPinningPiece().clonei());
+        Pawn.setEnpassantCell(this.enpassantCell.clonei());
+        return Pawn;
+    }
+
     @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 0 : 6;

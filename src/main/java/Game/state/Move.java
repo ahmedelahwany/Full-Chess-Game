@@ -5,7 +5,7 @@ import Game.state.Board.cell;
 
 import java.util.Objects;
 
-public class Move {
+public class Move implements Cloneable{
     private cell fromCell;
     private cell ToCell;
 
@@ -60,6 +60,30 @@ public class Move {
         REGULAR,
         CHECKMATE,
         STALEMATE
+    }
+
+    public void setFromCell(cell fromCell) {
+        this.fromCell = fromCell;
+    }
+
+    public void setToCell(cell toCell) {
+        ToCell = toCell;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Move clone;
+        try
+        {
+            clone = (Move) super.clone();
+            clone.setFromCell(this.getFromCell().clonei());
+            clone.setToCell(this.getToCell().clonei());
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new RuntimeException(e);
+        }
+        return clone;
     }
 
     public cell getFromCell() {
