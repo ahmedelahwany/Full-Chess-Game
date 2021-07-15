@@ -111,7 +111,7 @@ public abstract class Piece {
     protected boolean checkIfPieceDefendKing(Board board , Move possibleMove ,cell KingPosition){
         boolean oldFirstMove = possibleMove.getFromCell().getPiece().isFirstMove();
         cell currentEnpasantCell = board.getEnPassant();
-        Move.moveType lastMoveType = Board.lastMoveType;
+        Move.moveType lastMoveType = board.lastMoveType;
         King whiteKing = (King)board.getwKingPosition().getPiece();
         King blackKing = (King)board.getbKingPosition().getPiece();
         boolean oldWhiteKingChecked = whiteKing.isChecked();
@@ -140,6 +140,7 @@ public abstract class Piece {
     public abstract ArrayList<cell> getPossibleMoves(Move move , Board board , boolean possible);
 
     public abstract int getCode();
+    public abstract int getValue();
 
     public Color getColor() {
         return color;

@@ -4,15 +4,22 @@ import Game.state.Move;
 import Game.state.pieces.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Board {
 
     public static final int DIMENSION = 8;
 
+    public Piece.Color currentPlayerColor = Piece.Color.WHITE;
+
     private static cell wKingPosition;
     private static cell bKingPosition;
 
-    public static Move.moveType lastMoveType;
+    private ArrayList<Move> moveHistory = new ArrayList<>();
+
+    public static Board currentBoard;
+
+    public  Move.moveType lastMoveType;
 
     public Piece lastCapturedPiece;
 
@@ -58,15 +65,12 @@ public class Board {
             enPassant = null;
         }
 
-        // TODO
-        // check mate and stale mate ,pawn promotion , check , enpassant cases
+        this.moveHistory.add(move);
 
 
         checkPinnedPieces();
         checkIfKingsAreunderCheck(checkKingMating);
-
-
-        System.out.println(lastMoveType);
+        switchPlayersColor();
     }
 
 
@@ -103,7 +107,7 @@ public class Board {
 
     // this method is used to undo moves after simulating executing moves on a board for checking if any piece can defend its king while checking if it's checkmated or nor
     public void undoMove(Move move ,boolean oldFirstMove , Move.moveType lastMoveType , cell enPassantCell , boolean BCheck , boolean wCheck){
-        Board.lastMoveType = lastMoveType;
+        this.lastMoveType = lastMoveType;
         this.setEnPassant(enPassantCell);
         move.getFromCell().getPiece().setFirstMove(oldFirstMove);
         move.getFromCell().getPiece().setPinningPiece(null);
@@ -166,16 +170,29 @@ public class Board {
         return attackedCellsByOpponent;
     }
 
-    public ArrayList<cell> getAllPossibleMove(Piece.Color playerColor) {
-        ArrayList<cell> possibleCells = new ArrayList<>();
+    public List<Move> getNumFromMoveHistory(int n){
+        List<Move> numberOfMoves = new ArrayList<>(this.moveHistory.subList(this.moveHistory.size() - n - 1, this.moveHistory.size() - 1));
+        numberOfMoves.add(this.moveHistory.get(this.moveHistory.size()-1));
+        return numberOfMoves;
+    }
+
+    public ArrayList<Move> getAllPossibleMove(Piece.Color playerColor , boolean attack) {
+        ArrayList<Move> possibleMoves = new ArrayList<>();
         for ( cell[] row : this.getCells()) {
             for (cell cell : row) {
-                if (cell.getPiece() != null && cell.getPiece().getType() != Piece.Type.KING && cell.getPiece().getColor() == playerColor) {
-                    possibleCells.addAll(cell.getPiece().getPossibleMoves(new Move(cell,new cell(0,0)),this,true));
+                if (cell.getPiece() != null && cell.getPiece().getColor() == playerColor) {
+                   for(cell move : cell.getPiece().getPossibleMoves(new Move(cell,new cell(0,0)),this,true)) {
+                       if (!attack || cell.getPiece().getType() != Piece.Type.PAWN) possibleMoves.add(new Move(cell,move));
+                   }
+                   if(attack && cell.getPiece().getType() == Piece.Type.PAWN){
+                       for (cell move : cell.getPiece().getRegularMoves()){
+                           possibleMoves.add(new Move(cell,move));
+                       }
+                   }
                 }
             }
         }
-        return possibleCells;
+        return possibleMoves;
     }
 
     // method to check if there are any pinned pieces for a every player ; this method should be executed after every move
@@ -258,6 +275,12 @@ public class Board {
     public void setEnPassant(cell enPassant) {
         this.enPassant = enPassant;
     }
+    private void switchPlayersColor (){
+        currentPlayerColor = currentPlayerColor == Piece.Color.WHITE ? Piece.Color.BLACK : Piece.Color.WHITE;
+    }
+
+
+
     @Override
     public String toString() {
             StringBuilder sb = new StringBuilder();

@@ -114,9 +114,6 @@ public class GameController {
 
 
 
-
-
-
     /**
      * Sets the name of the players in Start.fxml.
      * @param FirstPlayer the name of the player 1.

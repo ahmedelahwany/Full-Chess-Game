@@ -16,7 +16,8 @@ public class King extends Piece {
         this.setType(Type.KING);
     }
 
-    boolean isChecked ;
+     private boolean isChecked ;
+     public boolean isCastled;
 
     public boolean isChecked() {
         return isChecked;
@@ -31,13 +32,15 @@ public class King extends Piece {
 
         if(this.getPossibleMoves(move,board,true).contains(move.getToCell())){
             if( move.getToCell().getFile() - move.getFromCell().getFile() == 2){
-                Board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
+                board.lastMoveType = Move.moveType.CASTLE_KING_SIDE;
+                isCastled = true;
                 board.setEnPassant(null);
             } else if (move.getFromCell().getFile() - move.getToCell().getFile() == 2){
-                Board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
+                board.lastMoveType = Move.moveType.CASTLE_QUEEN_SIDE;
+                isCastled = true;
                 board.setEnPassant(null);
             } else {
-                Board.lastMoveType = Move.moveType.REGULAR;
+                board.lastMoveType = Move.moveType.REGULAR;
                 board.setEnPassant(null);
             }
 
@@ -109,13 +112,13 @@ public class King extends Piece {
 
         if(this.isChecked() &&
            this.getPossibleMoves(new Move(KingPosition,new cell (0,0)),board,true).size() == 0
-           && board.getAllPossibleMove(KingPosition.getPiece().getColor()).size() == 0){
+           && board.getAllPossibleMove(KingPosition.getPiece().getColor(),false).size() == 0){
             return "checkmate";
         }
         // check if king is staleMated ( it needs to be not under check and none of its pieces can't move)
         if(!this.isChecked() &&
              board.getAttackedCellsByOpponent(this.getColor()).size() == 0){
-            Board.lastMoveType = Move.moveType.STALEMATE;
+            board.lastMoveType = Move.moveType.STALEMATE;
             return "stalemate";
         }
             return null;
@@ -145,6 +148,11 @@ public class King extends Piece {
     @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 5 : 11;
+    }
+
+    @Override
+    public int getValue() {
+        return 10000;
     }
 
 }

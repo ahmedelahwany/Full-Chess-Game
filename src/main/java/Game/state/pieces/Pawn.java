@@ -20,12 +20,12 @@ public class Pawn extends Piece {
     public void validateMove(Move move, Board board) {
 
          if(this.twoCellsMoves.contains(move.getToCell())){
-             Board.lastMoveType = Move.moveType.REGULAR;
+             board.lastMoveType = Move.moveType.REGULAR;
              board.setEnPassant(move.getToCell());
          } else if (move.getToCell().equals(enpassantCell)) {
-             Board.lastMoveType = Move.moveType.PAWN_EN_PASSANT;
+             board.lastMoveType = Move.moveType.PAWN_EN_PASSANT;
          } else {
-             Board.lastMoveType = Move.moveType.REGULAR;
+             board.lastMoveType = Move.moveType.REGULAR;
              board.setEnPassant(null);
          }
     }
@@ -124,6 +124,11 @@ public class Pawn extends Piece {
     @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 0 : 6;
+    }
+
+    @Override
+    public int getValue() {
+        return 100;
     }
 
 }

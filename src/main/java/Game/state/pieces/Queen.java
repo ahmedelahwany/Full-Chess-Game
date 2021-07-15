@@ -15,7 +15,7 @@ public class Queen extends Piece {
 
     @Override
     public void validateMove(Move move, Board board) {
-        Board.lastMoveType = Move.moveType.REGULAR;
+        board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
 
     }
@@ -232,5 +232,10 @@ public class Queen extends Piece {
     @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 4 : 10;
+    }
+
+    @Override
+    public int getValue() {
+        return 900;
     }
 }

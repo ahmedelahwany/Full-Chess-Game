@@ -3,8 +3,6 @@ package Game.state.pieces;
 import Game.state.Board.Board;
 import Game.state.Board.cell;
 import Game.state.Move;
-
-import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.util.ArrayList;
 
 public class Bishop extends Piece {
@@ -16,7 +14,7 @@ public class Bishop extends Piece {
 
     @Override
     public void validateMove(Move move, Board board) {
-        Board.lastMoveType = Move.moveType.REGULAR;
+        board.lastMoveType = Move.moveType.REGULAR;
         board.setEnPassant(null);
     }
 
@@ -147,6 +145,11 @@ public class Bishop extends Piece {
     @Override
     public int getCode() {
         return this.getColor() == Color.WHITE ? 2 : 8;
+    }
+
+    @Override
+    public int getValue() {
+        return 300;
     }
 
 }

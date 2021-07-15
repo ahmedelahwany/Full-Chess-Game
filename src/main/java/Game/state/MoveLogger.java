@@ -29,17 +29,17 @@ public class MoveLogger {
 
 
     private String getMoveAnnotation(Move move , Board board) {
-        if(Board.lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
+        if(board.lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
             return "O-O-O";
-        } else if(Board.lastMoveType == Move.moveType.CASTLE_KING_SIDE){
+        } else if(board.lastMoveType == Move.moveType.CASTLE_KING_SIDE){
             return "O-O";
         }
-        return move.getFromCell() + (board.lastCapturedPiece == null ? "" : "x") + (Board.lastMoveType == Move.moveType.PAWN_EN_PASSANT ? "x" : "") +
+        return move.getFromCell() + (board.lastCapturedPiece == null ? "" : "x") + (board.lastMoveType == Move.moveType.PAWN_EN_PASSANT ? "x" : "") +
                getCharForNumber(move.getToCell().getFile() + 1) + (8 - move.getToCell().getRank()) + checkIfkingIsCheckedOrMated(board);
     }
 
     private String checkIfkingIsCheckedOrMated(Board board) {
-        if(Board.lastMoveType == Move.moveType.CHECKMATE){
+        if(board.lastMoveType == Move.moveType.CHECKMATE){
             return "#";
         } else if(board.checkIfKingsAreunderCheck(false)){
             return "+";

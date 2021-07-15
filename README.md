@@ -1,15 +1,19 @@
 
-# Chess App
-> 2 player Full Chess Game with GUI (JavaFx) based on MVC pattern implemented from scratch.
+# Chess App With AI
+> 2 player Full Chess Game with GUI (JavaFx) implemented from scratch based on MVC pattern .
+>
+> AI has been integrated to create a chess engine
 
 
 # Table of Contents
 
 - [Features](#Features)
+- [AI](#AI)
 - [Demo](#Demo)
 - [Technologies](#Technologies)
 - [Install](#Install)
 - [Run](#Run)
+- [Upcoming](#Upcoming)
 
 # Features
 
@@ -26,6 +30,20 @@ This is a complete Chess game written in Java with GUI ; It has been tested by p
 1. Chess Clock (Custom minutes per side and Increment in seconds)
 2. Move Logger following the chess moves' notations rules
 3. Buttons for claiming Draw and Resignations.
+
+# AI
+  Players can choose to play against an elementary chess engine
+
+**Features**
+
+- The engine uses MinMax , alpha beta with Quiescence search and iterative deepening as search algorithms.
+
+- Evaluation of a board position (heuristics) are based on the following :
+   - Material Balance 
+   - Pawn Structure (isolated pawns , double pawns , backward pawns)
+   - Bishop pairs
+   - King-related evaluations (check ,checkmate , castling availability)
+   - Mobility (number of available moves and and number of attack moves)
 
 # Demo
 **- This is a Demo of two players playing a timed game**
@@ -65,6 +83,11 @@ mvn package
 java -jar ./target/Full-Chess-Game-1.0.jar
 ```
 
-## License
+# Upcoming
+
+- AI enhancement and integrating AI with GUI
+- Provide unit tests for AI
+
+# License
 
 - Copyright 2021 © <a href="https://github.com/ahmedelahwany" target="_blank">Ahmed Elahwany</a>.

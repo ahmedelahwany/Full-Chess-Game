@@ -7,8 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Arrays;
 
-import static Game.state.Board.Board.DIMENSION;
-import static Game.state.Board.Board.lastMoveType;
 
 /**
  * Class representing the state of the puzzle.
@@ -81,20 +79,20 @@ public class GameState {
 
         move.getFromCell().getPiece().validateMove(move,board);
 
-        if (lastMoveType == Move.moveType.REGULAR)
+        if (board.lastMoveType == Move.moveType.REGULAR)
        {
            changePiecePositionInState(move.getFromCell(),move.getToCell());
        }
-        else if (lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
+        else if (board.lastMoveType == Move.moveType.CASTLE_QUEEN_SIDE){
             changePiecePositionInState(move.getFromCell(),move.getToCell());
             changePiecePositionInState(board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()-4],
                                        board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()-1]);
         }
-        else if (lastMoveType == Move.moveType.CASTLE_KING_SIDE){
+        else if (board.lastMoveType == Move.moveType.CASTLE_KING_SIDE){
             changePiecePositionInState(move.getFromCell(),move.getToCell());
             changePiecePositionInState(board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()+3],
                                        board.getCells()[move.getFromCell().getRank()][move.getFromCell().getFile()+1]);
-        } else if (lastMoveType == Move.moveType.PAWN_EN_PASSANT){
+        } else if (board.lastMoveType == Move.moveType.PAWN_EN_PASSANT){
             changePiecePositionInState(move.getFromCell(),move.getToCell());
             INITIAL[board.getEnPassant().getRank()][board.getEnPassant().getFile()] = 30;
         }
@@ -114,9 +112,9 @@ public class GameState {
      * Checks whether the game is finished.
      */
     public String isGameFinished(){
-        if(lastMoveType == Move.moveType.CHECKMATE ){
+        if(board.lastMoveType == Move.moveType.CHECKMATE ){
             return "Check Mate";
-        } else if(lastMoveType == Move.moveType.STALEMATE){
+        } else if(board.lastMoveType == Move.moveType.STALEMATE){
             return  "Stale Mate";
         } else {
             return null;
