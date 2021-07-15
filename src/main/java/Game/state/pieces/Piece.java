@@ -137,6 +137,20 @@ public abstract class Piece {
             this.possibleMoves.add(possibleCell);
         }}
     }
+    protected boolean addPiece(Board board,int rank ,int file , Piece.Color currentPlayerColor ,cell OpponentKing,boolean possible ,Move move) {
+        cell possibleCell = board.getCells()[rank][file];
+        if (possibleCell.getPiece() != null) {
+            this.RegularMoves.add(possibleCell);
+            if (possibleCell.getPiece().getColor() != currentPlayerColor) {
+                this.AddPossibleMove(board,move,possibleCell,possible);
+            }
+            if(possible || !(possibleCell.equals(OpponentKing)) ) return true;
+
+        }
+        this.RegularMoves.add(possibleCell);
+        this.AddPossibleMove(board,move,possibleCell,possible);
+        return false;
+    }
     public abstract ArrayList<cell> getPossibleMoves(Move move , Board board , boolean possible);
 
     public abstract int getCode();

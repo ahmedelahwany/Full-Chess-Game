@@ -152,6 +152,7 @@ public class GameController {
             if(newValue){
                 countDownPlayerOne.stop();
                 countDownPlayerTwo.stop();
+                disableBtns(true);
             }
         }));
     }

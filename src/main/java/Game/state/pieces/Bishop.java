@@ -47,87 +47,39 @@ public class Bishop extends Piece {
                 filePinningDirection = 2;
             }
         }
-       if (rankPinningDirection * filePinningDirection == 1 || rankPinningDirection == 0)
-               {
-                   while(iteratorX + fromCellRank < Board.DIMENSION && iteratorY + fromCellFile < Board.DIMENSION){
-
-                      cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile + iteratorY];
-                    if ( possibleCell.getPiece() != null) {
-                        this.RegularMoves.add(possibleCell);
-                        if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                            this.AddPossibleMove(board,move,possibleCell,possible);
-                        }
-                                            if(possible || !(possibleCell.equals(OpponentKing)) )break;
-
-                    }
-                    this.RegularMoves.add(possibleCell);
-                    this.AddPossibleMove(board,move,possibleCell,possible);
-                    iteratorX++;
-                    iteratorY++;
-                }
-                iteratorX = 1;
-                iteratorY = 1;
+        if (rankPinningDirection * filePinningDirection == 1 || rankPinningDirection == 0)
+        {
+            while(iteratorX + fromCellRank < Board.DIMENSION && iteratorY + fromCellFile < Board.DIMENSION){
+                if(this.addPiece(board, fromCellRank + iteratorX, fromCellFile + iteratorY, currentPlayerColor, OpponentKing, possible, move)) break;
+                iteratorX++;
+                iteratorY++;
+            }
+            iteratorX = 1;
+            iteratorY = 1;
             while (fromCellRank - iteratorX >= 0 && fromCellFile - iteratorY >= 0) {
-
-                cell possibleCell = board.getCells()[fromCellRank - iteratorX][fromCellFile - iteratorY];
-                this.RegularMoves.add(possibleCell);
-                if (possibleCell.getPiece() != null) {
-                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.AddPossibleMove(board,move,possibleCell,possible);
-                    }
-                                        if(possible || !(possibleCell.equals(OpponentKing)) )break;
-
-                }
-                this.RegularMoves.add(possibleCell);
-                this.AddPossibleMove(board,move,possibleCell,possible);
+                if(this.addPiece(board, fromCellRank - iteratorX, fromCellFile - iteratorY, currentPlayerColor, OpponentKing, possible, move)) break;
                 iteratorX++;
                 iteratorY++;
             }
         }
-         iteratorX = 1;
-         iteratorY = 1;
+        iteratorX = 1;
+        iteratorY = 1;
+        if (rankPinningDirection * filePinningDirection == -1 || rankPinningDirection == 0) {
+            while (fromCellRank - iteratorX >= 0 && fromCellFile + iteratorY < Board.DIMENSION) {
+                if(this.addPiece(board, fromCellRank - iteratorX, fromCellFile + iteratorY, currentPlayerColor, OpponentKing, possible, move)) break;
+                iteratorX++;
+                iteratorY++;
+            }
 
-
-         if (rankPinningDirection * filePinningDirection == -1 || rankPinningDirection == 0) {
-
-             while (fromCellRank - iteratorX >= 0 && fromCellFile + iteratorY < Board.DIMENSION) {
-
-                 cell possibleCell = board.getCells()[fromCellRank - iteratorX][fromCellFile + iteratorY];
-                 this.RegularMoves.add(possibleCell);
-                 if (possibleCell.getPiece() != null) {
-                     if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                         this.AddPossibleMove(board,move,possibleCell,possible);
-                     }
-                                         if(possible || !(possibleCell.equals(OpponentKing)) )break;
-
-                 }
-                 this.RegularMoves.add(possibleCell);
-                 this.AddPossibleMove(board,move,possibleCell,possible);
-                 iteratorX++;
-                 iteratorY++;
-             }
-
-             iteratorX = 1;
-             iteratorY = 1;
+            iteratorX = 1;
+            iteratorY = 1;
 
             while (fromCellRank + iteratorX < Board.DIMENSION && fromCellFile - iteratorY >= 0) {
-
-                cell possibleCell = board.getCells()[fromCellRank + iteratorX][fromCellFile - iteratorY];
-                if (possibleCell.getPiece() != null) {
-                    this.RegularMoves.add(possibleCell);
-                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.AddPossibleMove(board,move,possibleCell,possible);
-                    }
-                                        if(possible || !(possibleCell.equals(OpponentKing)) )break;
-
-                }
-                this.RegularMoves.add(possibleCell);
-                this.AddPossibleMove(board,move,possibleCell,possible);
+                if(this.addPiece(board, fromCellRank + iteratorX, fromCellFile - iteratorY, currentPlayerColor, OpponentKing, possible, move)) break;
                 iteratorX++;
                 iteratorY++;
             }
         }
-
         return this.possibleMoves;
     }
 

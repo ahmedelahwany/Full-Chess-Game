@@ -44,73 +44,27 @@ public class Rock extends Piece{
                 rankPinned = true;
             }
         }
-        if(rankPinned || !filePinned) {
+        if(rankPinned || !filePinned  ) {
             while (iterator + fromCellFile < Board.DIMENSION) {
-
-                cell possibleCell = board.getCells()[fromCellRank][fromCellFile + iterator];
-                if (possibleCell.getPiece() != null) {
-                    this.RegularMoves.add(possibleCell);
-                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.AddPossibleMove(board,move,possibleCell,possible);
-                    }
-                    if(possible || !(possibleCell.equals(OpponentKing)) )break;
-                }
-                this.RegularMoves.add(possibleCell);
-                this.AddPossibleMove(board,move,possibleCell,possible);
+                if(this.addPiece(board, fromCellRank, iterator + fromCellFile, currentPlayerColor, OpponentKing, possible, move)) break;
                 iterator++;
             }
-
             iterator = 1;
-
-
             while (fromCellFile - iterator >= 0) {
-
-                cell possibleCell = board.getCells()[fromCellRank][fromCellFile - iterator];
-                if (possibleCell.getPiece() != null) {
-                    this.RegularMoves.add(possibleCell);
-                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.AddPossibleMove(board,move,possibleCell,possible);
-                    }
-                    if(possible || !(possibleCell.equals(OpponentKing))) break;
-                }
-                this.RegularMoves.add(possibleCell);
-                this.AddPossibleMove(board,move,possibleCell,possible);
+                if(this.addPiece(board, fromCellRank, fromCellFile - iterator, currentPlayerColor, OpponentKing, possible, move)) break;
                 iterator++;
             }
-
             iterator = 1;
-
         }
 
-        if(filePinned|| !rankPinned ) {
+        if(!rankPinned|| filePinned) {
             while (fromCellRank + iterator < Board.DIMENSION) {
-
-                cell possibleCell = board.getCells()[fromCellRank + iterator][fromCellFile];
-                if (possibleCell.getPiece() != null) {
-                    this.RegularMoves.add(possibleCell);
-                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.AddPossibleMove(board,move,possibleCell,possible);
-                    }
-                    if(possible || !(possibleCell.equals(OpponentKing)) )break;
-                }
-                this.RegularMoves.add(possibleCell);
-                this.AddPossibleMove(board,move,possibleCell,possible);
+                if(this.addPiece(board, fromCellRank + iterator, fromCellFile, currentPlayerColor, OpponentKing, possible, move)) break;
                 iterator++;
             }
             iterator = 1;
-
             while (fromCellRank - iterator >= 0) {
-
-                cell possibleCell = board.getCells()[fromCellRank - iterator][fromCellFile];
-                if (possibleCell.getPiece() != null) {
-                    this.RegularMoves.add(possibleCell);
-                    if (possibleCell.getPiece().getColor() != currentPlayerColor) {
-                        this.AddPossibleMove(board,move,possibleCell,possible);
-                    }
-                    if(possible || !(possibleCell.equals(OpponentKing)) )break;
-                }
-                this.RegularMoves.add(possibleCell);
-                this.AddPossibleMove(board,move,possibleCell,possible);
+                if(this.addPiece(board, fromCellRank - iterator, fromCellFile, currentPlayerColor, OpponentKing, possible, move)) break;
                 iterator++;
             }
         }
